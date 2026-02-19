@@ -1,0 +1,40 @@
+:host {
+    display: block;
+}
+
+.about-flores {
+    background: linear-gradient(135deg, #f8fffe 0%, #e8f5e8 100%);
+}
+
+.flores-destacadas .badge {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+}
+
+.about-image-placeholder {
+    position: relative;
+    min-height: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.about-image-placeholder img {
+    position: relative;
+    z-index: 1;
+}
+
+.about-image-placeholder .placeholder-content {
+    display: none;
+    text-align: center;
+    color: var(--flores-green);
+    opacity: 0.5;
+}
+
+.about-image-placeholder.no-image img {
+    display: none;
+}
+
+.about-image-placeholder.no-image .placeholder-content {
+    display: block;
+}

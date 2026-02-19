@@ -1,0 +1,91 @@
+<section class="hero-section">
+    <!-- Gradient edge overlays -->
+    <div class="edge-gradient edge-left"></div>
+    <div class="edge-gradient edge-right"></div>
+
+    <!-- Carousel with scroll-snap -->
+    <div class="carousel">
+        <div class="group">
+            <!-- Slide 1 -->
+            <div class="card card1" style="background-image: url('assets/img/local-flores.jpg');">
+                <div class="card-overlay"></div>
+                <div class="card-content">
+                    <h1>FLORES</h1>
+                    <p class="subtitle">Que inspiran amor propio</p>
+                    <p class="description">
+                        Descubre la belleza natural que despierta tus sentimientos más profundos.<br>
+                        Flores frescas que celebran cada momento especial de tu vida.
+                    </p>
+                    <div class="card-buttons">
+                        <a href="https://wa.me/573114582898?text=Hola! Quiero conocer las flores disponibles hoy"
+                            target="_blank" class="btn btn-success btn-lg">
+                            <i class="fab fa-whatsapp me-2"></i>Ver Flores del Día
+                        </a>
+                        <a routerLink="/catalogo" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-seedling me-2"></i>Nuestro Catálogo
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 2 -->
+            <div class="card card2" style="background-image: url('assets/img/ramo.jpg');">
+                <div class="card-overlay"></div>
+                <div class="card-content">
+                    <h1>ASTROMELIAS</h1>
+                    <p class="subtitle">Nuestras flores más populares</p>
+                    <p class="description">
+                        Colores vibrantes que alegran cualquier espacio<br>
+                        y despiertan sonrisas sinceras.
+                    </p>
+                    <div class="card-buttons">
+                        <a href="https://wa.me/573114582898?text=Hola! Me interesan las Astromelias. ¿Qué colores tienen disponibles?"
+                            target="_blank" class="btn btn-success btn-lg">
+                            <i class="fab fa-whatsapp me-2"></i>Consultar Disponibilidad
+                        </a>
+                        <a routerLink="/galeria" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-images me-2"></i>Ver Galería
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3 -->
+            <div class="card card3" style="background-image: url('assets/img/ramos_03.jpg');">
+                <div class="card-overlay"></div>
+                <div class="card-content">
+                    <h1>MOMENTOS ÚNICOS</h1>
+                    <p class="subtitle">Que inspiran amor propio</p>
+                    <p class="description">
+                        Rosas, girasoles y flores especiales para celebrar el amor.<br>
+                        Cada ramillete cuenta una historia única.
+                    </p>
+                    <div class="card-buttons">
+                        <a href="https://wa.me/573114582898?text=Hola! Quiero un ramillete especial para regalar"
+                            target="_blank" class="btn btn-success btn-lg">
+                            <i class="fab fa-whatsapp me-2"></i>Hacer Pedido
+                        </a>
+                        <a routerLink="/contacto" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-map-marker-alt me-2"></i>Cómo Llegar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manual nav arrows -->
+    <button class="carousel-arrow arrow-left" (click)="scrollPrev()" aria-label="Anterior">
+        <i class="fas fa-chevron-left"></i>
+    </button>
+    <button class="carousel-arrow arrow-right" (click)="scrollNext()" aria-label="Siguiente">
+        <i class="fas fa-chevron-right"></i>
+    </button>
+
+    <!-- Dot indicators -->
+    <div class="carousel-dots">
+        <button class="dot" (click)="scrollToSlide(0)" aria-label="Slide 1"></button>
+        <button class="dot" (click)="scrollToSlide(1)" aria-label="Slide 2"></button>
+        <button class="dot" (click)="scrollToSlide(2)" aria-label="Slide 3"></button>
+    </div>
+</section>

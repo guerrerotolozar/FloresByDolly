@@ -1,0 +1,77 @@
+:host {
+    display: block;
+}
+
+.arreglos-especiales {
+    background: linear-gradient(135deg, #f8fffe 0%, #f1f8f1 100%);
+}
+
+.special-card {
+    background: var(--flores-white);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(19, 89, 42, 0.1);
+    border: 1px solid rgba(252, 211, 77, 0.2);
+}
+
+.special-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(19, 89, 42, 0.2);
+}
+
+.special-image {
+    position: relative;
+    overflow: hidden;
+    height: 250px;
+}
+
+.special-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.special-card:hover .special-image img {
+    transform: scale(1.05);
+}
+
+.special-overlay {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
+.badge-especial {
+    background: linear-gradient(45deg, #ff6b9d, #ff8cc8);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+}
+
+.badge-delicado {
+    background: linear-gradient(45deg, #a8e6cf, #88d8a3);
+    color: var(--flores-green-dark);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    box-shadow: 0 4px 15px rgba(168, 230, 207, 0.3);
+}
+
+.badge-variedad {
+    background: linear-gradient(45deg, #ffd93d, #ffb74d);
+    color: var(--flores-green-dark);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    box-shadow: 0 4px 15px rgba(255, 217, 61, 0.3);
+}

@@ -1,0 +1,90 @@
+<div class="dashboard">
+    <h1 class="page-title">
+        <i class="fas fa-chart-line me-2"></i> Dashboard
+    </h1>
+
+    <!-- Stats Cards -->
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-icon bg-green">
+                <i class="fas fa-box"></i>
+            </div>
+            <div class="stat-info">
+                <span class="stat-number">{{ totalProducts }}</span>
+                <span class="stat-label">Productos Total</span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon bg-blue">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-info">
+                <span class="stat-number">{{ activeProducts }}</span>
+                <span class="stat-label">Productos Activos</span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon bg-yellow">
+                <i class="fas fa-tags"></i>
+            </div>
+            <div class="stat-info">
+                <span class="stat-number">{{ totalCategories }}</span>
+                <span class="stat-label">Categorías</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="section-card">
+        <h3 class="section-title">Acciones Rápidas</h3>
+        <div class="quick-actions">
+            <a routerLink="/admin/productos/nuevo" class="action-btn">
+                <i class="fas fa-plus-circle"></i>
+                <span>Nuevo Producto</span>
+            </a>
+            <a routerLink="/admin/productos" class="action-btn">
+                <i class="fas fa-list"></i>
+                <span>Ver Productos</span>
+            </a>
+            <a routerLink="/admin/categorias" class="action-btn">
+                <i class="fas fa-tags"></i>
+                <span>Categorías</span>
+            </a>
+            <a href="https://wa.me/573114582898" target="_blank" class="action-btn">
+                <i class="fab fa-whatsapp"></i>
+                <span>WhatsApp</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Recent Products -->
+    @if (recentProducts.length) {
+    <div class="section-card">
+        <h3 class="section-title">Productos Recientes</h3>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (product of recentProducts; track product._id) {
+                    <tr>
+                        <td class="fw-bold">{{ product.name }}</td>
+                        <td>{{ product.price }}</td>
+                        <td>
+                            <span class="badge" [class]="product.isActive ? 'bg-success' : 'bg-secondary'">
+                                {{ product.isActive ? 'Activo' : 'Inactivo' }}
+                            </span>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    }
+</div>

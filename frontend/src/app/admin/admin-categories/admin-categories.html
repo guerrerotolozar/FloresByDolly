@@ -1,0 +1,97 @@
+<div class="admin-categories">
+    <div class="page-header">
+        <h1 class="page-title">
+            <i class="fas fa-tags me-2"></i> Categorías
+        </h1>
+        <button class="btn btn-add" (click)="openNew()">
+            <i class="fas fa-plus me-1"></i> Nueva Categoría
+        </button>
+    </div>
+
+    <!-- Inline Form -->
+    @if (showForm) {
+    <div class="section-card form-card mb-3">
+        <h4>{{ editing ? 'Editar' : 'Nueva' }} Categoría</h4>
+        <form (ngSubmit)="save()">
+            <div class="row">
+                <div class="col-md-3 mb-2">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" class="form-control" [(ngModel)]="form.name" name="name" (input)="autoSlug()"
+                        placeholder="Flores Sencillas" />
+                </div>
+                <div class="col-md-3 mb-2">
+                    <label class="form-label">Slug</label>
+                    <input type="text" class="form-control" [(ngModel)]="form.slug" name="slug"
+                        placeholder="sencillas" />
+                </div>
+                <div class="col-md-2 mb-2">
+                    <label class="form-label">Icono</label>
+                    <input type="text" class="form-control" [(ngModel)]="form.icon" name="icon"
+                        placeholder="fas fa-leaf" />
+                </div>
+                <div class="col-md-2 mb-2">
+                    <label class="form-label">Orden</label>
+                    <input type="number" class="form-control" [(ngModel)]="form.order" name="order" />
+                </div>
+                <div class="col-md-2 mb-2 d-flex align-items-end gap-2">
+                    <button type="submit" class="btn btn-save btn-sm">
+                        <i class="fas fa-check me-1"></i> Guardar
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" (click)="showForm = false">
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    }
+
+    <!-- Categories Table -->
+    @if (loading) {
+    <div class="text-center py-5">
+        <div class="spinner-border text-success"></div>
+    </div>
+    } @else {
+    <div class="section-card">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Orden</th>
+                        <th>Icono</th>
+                        <th>Nombre</th>
+                        <th>Slug</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (cat of categories; track cat._id) {
+                    <tr [class.inactive]="!cat.isActive">
+                        <td>{{ cat.order }}</td>
+                        <td><i [class]="cat.icon" class="category-icon"></i></td>
+                        <td class="fw-bold">{{ cat.name }}</td>
+                        <td class="text-muted">{{ cat.slug }}</td>
+                        <td>
+                            <button class="btn-toggle-status" [class.active]="cat.isActive" (click)="toggleActive(cat)">
+                                <i [class]="cat.isActive ? 'fas fa-toggle-on' : 'fas fa-toggle-off'"></i>
+                            </button>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-action edit" (click)="openEdit(cat)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-action delete" (click)="deleteCategory(cat)">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    }
+</div>

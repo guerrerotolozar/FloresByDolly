@@ -1,0 +1,54 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" routerLink="/">
+            <img src="assets/img/logo_flores.png" alt="FLORES - Que inspiran amor propio" class="logo-navbar me-2"
+                onerror="this.style.display='none'">
+            <span class="brand-text">FLORES</span>
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/" routerLinkActive="active"
+                        [routerLinkActiveOptions]="{exact: true}">
+                        <i class="fas fa-home me-1"></i>Inicio
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/catalogo" routerLinkActive="active">
+                        <i class="fas fa-seedling me-1"></i>Catálogo
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/galeria" routerLinkActive="active">
+                        <i class="fas fa-images me-1"></i>Galería
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/contacto" routerLinkActive="active">
+                        <i class="fas fa-envelope me-1"></i>Contacto
+                    </a>
+                </li>
+            </ul>
+
+            <div class="d-flex align-items-center">
+                <div class="social-links me-3">
+                    <a href="#" class="text-light me-2" title="Facebook">
+                        <i class="fab fa-facebook-f fs-5"></i>
+                    </a>
+                    <a href="#" class="text-light" title="Instagram">
+                        <i class="fab fa-instagram fs-5"></i>
+                    </a>
+                </div>
+                <a routerLink="/contacto" class="btn btn-outline-light btn-sm d-none d-lg-block">
+                    <i class="fas fa-phone me-1"></i>Contáctanos
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>

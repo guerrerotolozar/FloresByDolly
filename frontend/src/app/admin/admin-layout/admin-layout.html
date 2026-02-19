@@ -1,0 +1,53 @@
+<div class="admin-wrapper" [class.sidebar-collapsed]="!sidebarOpen">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-leaf sidebar-logo"></i>
+            <span class="sidebar-title">Flores Admin</span>
+        </div>
+        <nav class="sidebar-nav">
+            <a routerLink="/admin/dashboard" routerLinkActive="active" class="nav-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
+            <a routerLink="/admin/productos" routerLinkActive="active" class="nav-item">
+                <i class="fas fa-box"></i>
+                <span>Productos</span>
+            </a>
+            <a routerLink="/admin/categorias" routerLinkActive="active" class="nav-item">
+                <i class="fas fa-tags"></i>
+                <span>Categorías</span>
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <a routerLink="/" class="nav-item">
+                <i class="fas fa-globe"></i>
+                <span>Ver Sitio</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="admin-main">
+        <!-- Topbar -->
+        <header class="admin-topbar">
+            <button class="btn-toggle" (click)="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="topbar-right">
+                <span class="user-name">
+                    <i class="fas fa-user-circle me-1"></i>
+                    {{ auth.user()?.displayName || 'Admin' }}
+                </span>
+                <button class="btn-logout" (click)="logout()">
+                    <i class="fas fa-sign-out-alt me-1"></i> Salir
+                </button>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <main class="admin-content">
+            <router-outlet />
+        </main>
+    </div>
+</div>

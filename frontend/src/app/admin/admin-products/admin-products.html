@@ -1,0 +1,76 @@
+<div class="admin-products">
+    <div class="page-header">
+        <h1 class="page-title">
+            <i class="fas fa-box me-2"></i> Productos
+        </h1>
+        <a routerLink="/admin/productos/nuevo" class="btn btn-add">
+            <i class="fas fa-plus me-1"></i> Nuevo Producto
+        </a>
+    </div>
+
+    @if (loading) {
+    <div class="text-center py-5">
+        <div class="spinner-border text-success"></div>
+        <p class="mt-2 text-muted">Cargando productos...</p>
+    </div>
+    } @else if (products.length === 0) {
+    <div class="empty-state">
+        <i class="fas fa-box-open"></i>
+        <h3>No hay productos</h3>
+        <p>Crea tu primer producto para empezar</p>
+        <a routerLink="/admin/productos/nuevo" class="btn btn-add">
+            <i class="fas fa-plus me-1"></i> Crear Producto
+        </a>
+    </div>
+    } @else {
+    <div class="products-table section-card">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nombre</th>
+                        <th>Categoría</th>
+                        <th>Precio</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (p of products; track p._id; let i = $index) {
+                    <tr [class.inactive]="!p.isActive">
+                        <td>{{ i + 1 }}</td>
+                        <td>
+                            <div class="product-name">
+                                @if (p.badgeLabel) {
+                                <span class="badge me-1" [class]="p.badgeClass">{{ p.badgeLabel }}</span>
+                                }
+                                <strong>{{ p.name }}</strong>
+                            </div>
+                        </td>
+                        <td>{{ getCategoryName(p) }}</td>
+                        <td>{{ p.price }}</td>
+                        <td>
+                            <button class="btn-toggle-status" [class.active]="p.isActive" (click)="toggleActive(p)">
+                                <i [class]="p.isActive ? 'fas fa-toggle-on' : 'fas fa-toggle-off'"></i>
+                                {{ p.isActive ? 'Activo' : 'Inactivo' }}
+                            </button>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <a [routerLink]="['/admin/productos', p._id]" class="btn-action edit" title="Editar">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <button class="btn-action delete" (click)="deleteProduct(p)" title="Eliminar">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    }
+</div>

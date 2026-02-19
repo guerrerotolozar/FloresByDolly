@@ -1,0 +1,4406 @@
+
+--------------------------------------------------
+ARCHIVO: .editorconfig
+--------------------------------------------------
+# Editor configuration, see https://editorconfig.org
+root = true
+
+[*]
+charset = utf-8
+indent_style = space
+indent_size = 2
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.ts]
+quote_type = single
+ij_typescript_use_double_quotes = false
+
+[*.md]
+max_line_length = off
+trim_trailing_whitespace = false
+
+
+--------------------------------------------------
+ARCHIVO: .gitignore
+--------------------------------------------------
+# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+
+# Compiled output
+/dist
+/tmp
+/out-tsc
+/bazel-out
+
+# Node
+/node_modules
+npm-debug.log
+yarn-error.log
+
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/mcp.json
+.history/*
+
+# Miscellaneous
+/.angular/cache
+.sass-cache/
+/connect.lock
+/coverage
+/libpeerconnection.log
+testem.log
+/typings
+__screenshots__/
+
+# System files
+.DS_Store
+Thumbs.db
+
+
+--------------------------------------------------
+ARCHIVO: .vscode\extensions.json
+--------------------------------------------------
+{
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=827846
+  "recommendations": ["angular.ng-template"]
+}
+
+
+--------------------------------------------------
+ARCHIVO: .vscode\launch.json
+--------------------------------------------------
+{
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "ng serve",
+      "type": "chrome",
+      "request": "launch",
+      "preLaunchTask": "npm: start",
+      "url": "http://localhost:4200/"
+    },
+    {
+      "name": "ng test",
+      "type": "chrome",
+      "request": "launch",
+      "preLaunchTask": "npm: test",
+      "url": "http://localhost:9876/debug.html"
+    }
+  ]
+}
+
+
+--------------------------------------------------
+ARCHIVO: .vscode\mcp.json
+--------------------------------------------------
+{
+  // For more information, visit: https://angular.dev/ai/mcp
+  "servers": {
+    "angular-cli": {
+      "command": "npx",
+      "args": ["-y", "@angular/cli", "mcp"]
+    }
+  }
+}
+
+
+--------------------------------------------------
+ARCHIVO: .vscode\tasks.json
+--------------------------------------------------
+{
+  // For more information, visit: https://go.microsoft.com/fwlink/?LinkId=733558
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "start",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "typescript",
+        "pattern": "$tsc",
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": {
+            "regexp": "Changes detected"
+          },
+          "endsPattern": {
+            "regexp": "bundle generation (complete|failed)"
+          }
+        }
+      }
+    },
+    {
+      "type": "npm",
+      "script": "test",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "typescript",
+        "pattern": "$tsc",
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": {
+            "regexp": "Changes detected"
+          },
+          "endsPattern": {
+            "regexp": "bundle generation (complete|failed)"
+          }
+        }
+      }
+    }
+  ]
+}
+
+
+--------------------------------------------------
+ARCHIVO: angular.json
+--------------------------------------------------
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "cli": {
+    "packageManager": "npm"
+  },
+  "newProjectRoot": "projects",
+  "projects": {
+    "frontend": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:class": {
+          "skipTests": true
+        },
+        "@schematics/angular:component": {
+          "skipTests": true
+        },
+        "@schematics/angular:directive": {
+          "skipTests": true
+        },
+        "@schematics/angular:guard": {
+          "skipTests": true
+        },
+        "@schematics/angular:interceptor": {
+          "skipTests": true
+        },
+        "@schematics/angular:pipe": {
+          "skipTests": true
+        },
+        "@schematics/angular:resolver": {
+          "skipTests": true
+        },
+        "@schematics/angular:service": {
+          "skipTests": true
+        }
+      },
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "src/main.ts",
+            "tsConfig": "tsconfig.app.json",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "public"
+              }
+            ],
+            "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
+              "node_modules/aos/dist/aos.css",
+              "src/styles.css"
+            ],
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
+              "node_modules/aos/dist/aos.js"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "frontend:build:production"
+            },
+            "development": {
+              "buildTarget": "frontend:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        }
+      }
+    }
+  }
+}
+
+
+--------------------------------------------------
+ARCHIVO: package.json
+--------------------------------------------------
+{
+  "name": "frontend",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "singleQuote": true,
+    "overrides": [
+      {
+        "files": "*.html",
+        "options": {
+          "parser": "angular"
+        }
+      }
+    ]
+  },
+  "private": true,
+  "packageManager": "npm@11.6.1",
+  "dependencies": {
+    "@angular/common": "^21.1.0",
+    "@angular/compiler": "^21.1.0",
+    "@angular/core": "^21.1.0",
+    "@angular/forms": "^21.1.0",
+    "@angular/platform-browser": "^21.1.0",
+    "@angular/router": "^21.1.0",
+    "@fortawesome/fontawesome-free": "^7.2.0",
+    "aos": "^2.3.4",
+    "bootstrap": "^5.3.8",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^21.1.4",
+    "@angular/cli": "^21.1.4",
+    "@angular/compiler-cli": "^21.1.0",
+    "typescript": "~5.9.2"
+  }
+}
+
+--------------------------------------------------
+ARCHIVO: README.md
+--------------------------------------------------
+# Frontend
+
+This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.4.
+
+## Development server
+
+To start a local development server, run:
+
+```bash
+ng serve
+```
+
+Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+
+## Code scaffolding
+
+Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+
+```bash
+ng generate component component-name
+```
+
+For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+
+```bash
+ng generate --help
+```
+
+## Building
+
+To build the project run:
+
+```bash
+ng build
+```
+
+This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+
+## Running unit tests
+
+To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+
+```bash
+ng test
+```
+
+## Running end-to-end tests
+
+For end-to-end (e2e) testing, run:
+
+```bash
+ng e2e
+```
+
+Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+
+## Additional Resources
+
+For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+
+--------------------------------------------------
+ARCHIVO: src\app\app.config.ts
+--------------------------------------------------
+import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { provideRouter } from '@angular/router';
+import { provideHttpClient, withFetch } from '@angular/common/http';
+
+import { routes } from './app.routes';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideBrowserGlobalErrorListeners(),
+    provideRouter(routes),
+    provideHttpClient(withFetch()),
+  ],
+};
+
+
+--------------------------------------------------
+ARCHIVO: src\app\app.css
+--------------------------------------------------
+
+
+--------------------------------------------------
+ARCHIVO: src\app\app.html
+--------------------------------------------------
+<app-header />
+<router-outlet />
+<app-footer />
+<app-whatsapp-float />
+
+--------------------------------------------------
+ARCHIVO: src\app\app.routes.ts
+--------------------------------------------------
+import { Routes } from '@angular/router';
+
+export const routes: Routes = [
+  {
+    path: '',
+    loadComponent: () => import('./pages/home/home').then((m) => m.Home),
+  },
+  {
+    path: 'catalogo',
+    loadComponent: () => import('./pages/catalogo/catalogo').then((m) => m.Catalogo),
+  },
+  {
+    path: 'galeria',
+    loadComponent: () => import('./pages/galeria/galeria').then((m) => m.Galeria),
+  },
+  {
+    path: 'contacto',
+    loadComponent: () => import('./pages/contacto/contacto').then((m) => m.Contacto),
+  },
+  {
+    path: '**',
+    redirectTo: '',
+    pathMatch: 'full',
+  },
+];
+
+
+--------------------------------------------------
+ARCHIVO: src\app\app.ts
+--------------------------------------------------
+import { Component, OnInit } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { Header } from './shared/header/header';
+import { Footer } from './shared/footer/footer';
+import { WhatsappFloat } from './shared/whatsapp-float/whatsapp-float';
+
+declare var AOS: any;
+
+@Component({
+  selector: 'app-root',
+  imports: [RouterOutlet, Header, Footer, WhatsappFloat],
+  templateUrl: './app.html',
+  styleUrl: './app.css',
+})
+export class App implements OnInit {
+  ngOnInit() {
+    // Initialize AOS (Animate On Scroll)
+    if (typeof AOS !== 'undefined') {
+      AOS.init({
+        duration: 1000,
+        easing: 'ease-in-out',
+        once: true,
+        offset: 120,
+      });
+    }
+  }
+}
+
+
+--------------------------------------------------
+ARCHIVO: src\app\pages\catalogo\catalogo.css
+--------------------------------------------------
+:host {
+    display: block;
+}
+
+/* ===== HERO ===== */
+.catalogo-hero {
+    background: linear-gradient(135deg, var(--flores-green) 0%, var(--flores-green-dark) 100%);
+    padding-top: 120px !important;
+    padding-bottom: 3rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.catalogo-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="p" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="rgba(252,211,77,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23p)"/></svg>');
+    opacity: 0.3;
+}
+
+.catalogo-hero .container {
+    position: relative;
+    z-index: 1;
+}
+
+.catalogo-hero h1 {
+    color: #fff !important;
+    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
+}
+
+.catalogo-hero .lead {
+    color: #fff !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.subtitle-hero {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+/* ===== INFO PRECIOS ===== */
+.info-precios {
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+/* ===== FILTERS ===== */
+.filtros-catalogo {
+    border-bottom: 2px solid rgba(19, 89, 42, 0.1);
+}
+
+.filter-btn {
+    transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+    transform: translateY(-2px);
+}
+
+/* ===== PRODUCT CARDS ===== */
+.producto-card {
+    background: #fff;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    display: flex;
+    flex-direction: column;
+}
+
+.producto-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(19, 89, 42, 0.2);
+    border-color: var(--flores-yellow);
+}
+
+.producto-image {
+    position: relative;
+    height: 260px;
+    overflow: hidden;
+}
+
+.producto-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.producto-card:hover .producto-image img {
+    transform: scale(1.1);
+}
+
+.producto-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 2;
+}
+
+.producto-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(19, 89, 42, 0.85) 0%, rgba(0, 0, 0, 0.3) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.producto-card:hover .producto-overlay {
+    opacity: 1;
+}
+
+.producto-actions {
+    text-align: center;
+}
+
+.producto-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.producto-actions-bottom {
+    margin-top: auto;
+}
+
+.precio-badge {
+    background: linear-gradient(45deg, var(--flores-yellow), var(--flores-yellow-dark, #F59E0B));
+    color: var(--flores-green-dark);
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.info-adicional {
+    border: 2px solid rgba(19, 89, 42, 0.1);
+}
+
+/* ===== CTA ===== */
+.cta-catalogo {
+    background: linear-gradient(135deg, var(--flores-green) 0%, var(--flores-green-dark) 100%);
+    color: #fff;
+}
+
+.cta-catalogo h3 {
+    color: #fff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.cta-catalogo .lead {
+    color: var(--flores-yellow-light, #FDE68A);
+}
+
+/* ===== LIGHTBOX ===== */
+.lightbox-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    animation: fadeIn 0.3s ease;
+}
+
+.lightbox-content {
+    max-width: 900px;
+    width: 100%;
+    position: relative;
+}
+
+.lightbox-content img {
+    border-radius: 1rem;
+    max-height: 70vh;
+    width: 100%;
+    object-fit: contain;
+}
+
+.lightbox-close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 2.5rem;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.lightbox-footer {
+    text-align: center;
+    margin-top: 1rem;
+    color: #fff;
+}
+
+.lightbox-footer h5 {
+    color: #fff;
+}
+
+.lightbox-footer p {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .catalogo-hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .producto-image {
+        height: 200px;
+    }
+
+    .cta-catalogo .btn {
+        display: block;
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+
+    .cta-catalogo .me-3 {
+        margin-right: 0 !important;
+    }
+
+    .info-precios .d-flex {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+--------------------------------------------------
+ARCHIVO: src\app\pages\catalogo\catalogo.html
+--------------------------------------------------
+<!-- Hero Section Catálogo -->
+<section class="catalogo-hero py-5">
+    <div class="container">
+        <div class="row align-items-center text-center text-white py-5">
+            <div class="col-12" data-aos="fade-down">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="fas fa-seedling me-3"></i>Nuestro Catálogo
+                </h1>
+                <p class="lead mb-4">Descubre nuestras flores frescas y arreglos especiales</p>
+                <p class="fs-5 subtitle-hero">
+                    <i class="fas fa-heart me-2"></i>
+                    Cada flor seleccionada con amor para inspirar tu amor propio
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Información importante -->
+<section class="info-precios py-4 bg-warning">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center" data-aos="fade-up">
+                <div class="d-flex align-items-center justify-content-center flex-wrap gap-3">
+                    <i class="fas fa-info-circle fa-2x text-dark"></i>
+                    <div class="text-dark">
+                        <h5 class="mb-1 fw-bold">Precios Variables por Temporada</h5>
+                        <p class="mb-0">Los precios cambian según disponibilidad, clima y cosecha. <strong>Consulta por
+                                WhatsApp para conocer las flores del día.</strong></p>
+                    </div>
+                    <a href="https://wa.me/573114582898?text=Hola! Quiero conocer los precios y disponibilidad de hoy"
+                        target="_blank" class="btn btn-dark btn-lg">
+                        <i class="fab fa-whatsapp me-2"></i>Consultar Precios
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Filtros de Categoría -->
+<section class="filtros-catalogo py-4 bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="d-flex justify-content-center flex-wrap gap-3" data-aos="fade-up">
+                    <button class="btn filter-btn" [class.btn-primary]="activeFilter==='all'"
+                        [class.btn-outline-primary]="activeFilter!=='all'" (click)="setFilter('all')">
+                        <i class="fas fa-th me-2"></i>Todas las Flores
+                    </button>
+                    <button class="btn filter-btn" [class.btn-primary]="activeFilter==='sencillas'"
+                        [class.btn-outline-primary]="activeFilter!=='sencillas'" (click)="setFilter('sencillas')">
+                        <i class="fas fa-leaf me-2"></i>Flores Sencillas
+                    </button>
+                    <button class="btn filter-btn" [class.btn-primary]="activeFilter==='especiales'"
+                        [class.btn-outline-primary]="activeFilter!=='especiales'" (click)="setFilter('especiales')">
+                        <i class="fas fa-star me-2"></i>Arreglos Especiales
+                    </button>
+                    <button class="btn filter-btn" [class.btn-primary]="activeFilter==='rosas'"
+                        [class.btn-outline-primary]="activeFilter!=='rosas'" (click)="setFilter('rosas')">
+                        <i class="fas fa-heart me-2"></i>Rosas
+                    </button>
+                    <button class="btn filter-btn" [class.btn-primary]="activeFilter==='temporada'"
+                        [class.btn-outline-primary]="activeFilter!=='temporada'" (click)="setFilter('temporada')">
+                        <i class="fas fa-calendar-alt me-2"></i>De Temporada
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Grid de Productos -->
+<section class="catalogo-productos py-5">
+    <div class="container">
+        <div class="row g-4">
+            @for (item of filteredItems; track item.name) {
+            <div class="col-lg-4 col-md-6 producto-item" data-aos="zoom-in">
+                <div class="producto-card h-100">
+                    <div class="producto-image">
+                        <img [src]="item.img" [alt]="item.name" class="img-fluid">
+                        <div class="producto-badge">
+                            <span class="badge" [ngClass]="item.badgeClass">{{ item.badgeLabel }}</span>
+                        </div>
+                        <div class="producto-overlay">
+                            <div class="producto-actions">
+                                <button class="btn btn-warning btn-sm mb-2" (click)="openLightbox(item)">
+                                    <i class="fas fa-eye me-1"></i>Ver
+                                </button>
+                                <a [href]="item.consultUrl" target="_blank" class="btn btn-success btn-sm">
+                                    <i class="fab fa-whatsapp me-1"></i>Consultar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="producto-info p-4">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="fw-bold text-flores-green mb-0">{{ item.name }}</h5>
+                            <span class="precio-badge">{{ item.price }}</span>
+                        </div>
+                        <p class="text-muted mb-3">{{ item.description }}</p>
+
+                        <div class="caracteristicas mb-3">
+                            <h6 class="fw-bold text-flores-green mb-2">Características:</h6>
+                            <ul class="list-unstyled small">
+                                @for (feat of item.features; track feat) {
+                                <li><i class="fas fa-check text-success me-2"></i>{{ feat }}</li>
+                                }
+                            </ul>
+                        </div>
+
+                        <div class="tags mb-3">
+                            @for (tag of item.tags; track tag) {
+                            <span class="badge bg-light text-dark me-1">{{ tag }}</span>
+                            }
+                        </div>
+
+                        <div class="producto-actions-bottom">
+                            <a [href]="item.orderUrl" target="_blank" class="btn btn-primary w-100">
+                                <i class="fab fa-whatsapp me-2"></i>{{ item.orderLabel }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+
+        <!-- Sección de información adicional -->
+        <div class="row mt-5">
+            <div class="col-12" data-aos="fade-up">
+                <div class="info-adicional bg-light p-4 rounded-4">
+                    <div class="row align-items-center">
+                        <div class="col-lg-8">
+                            <h4 class="fw-bold text-flores-green mb-3">
+                                <i class="fas fa-info-circle me-2"></i>Información Importante
+                            </h4>
+                            <ul class="list-unstyled mb-0">
+                                <li class="mb-2"><i
+                                        class="fas fa-clock text-success me-2"></i><strong>Horarios:</strong> Lunes a
+                                    Sábado, 9:00 a.m. – 7:00 p.m.</li>
+                                <li class="mb-2"><i
+                                        class="fas fa-truck text-success me-2"></i><strong>Entregas:</strong>
+                                    Disponibles en Villa Alsacia y zonas cercanas</li>
+                                <li class="mb-2"><i class="fas fa-gift text-success me-2"></i><strong>Empaque:</strong>
+                                    Moños decorativos incluidos sin costo adicional</li>
+                                <li class="mb-0"><i class="fas fa-leaf text-success me-2"></i><strong>Frescura:</strong>
+                                    Flores seleccionadas diariamente</li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-4 text-center">
+                            <a routerLink="/contacto" class="btn btn-outline-primary btn-lg mb-2 w-100">
+                                <i class="fas fa-map-marker-alt me-2"></i>Cómo Llegar
+                            </a>
+                            <a routerLink="/galeria" class="btn btn-outline-secondary btn-lg w-100">
+                                <i class="fas fa-images me-2"></i>Ver Galería
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Sección de llamada a la acción -->
+<section class="cta-catalogo py-5">
+    <div class="container">
+        <div class="row align-items-center text-center">
+            <div class="col-12" data-aos="zoom-in">
+                <h3 class="display-6 fw-bold mb-4">¿Encontraste tu flor ideal?</h3>
+                <p class="lead mb-5">
+                    Cada flor tiene el poder de transmitir emociones. Déjanos ayudarte a encontrar la perfecta para tu
+                    ocasión especial.
+                </p>
+                <div>
+                    <a href="https://wa.me/573114582898?text=Hola! He visto su catálogo y me interesan varias flores. ¿Pueden ayudarme a elegir?"
+                        target="_blank" class="btn btn-success btn-lg px-5 py-3 me-3">
+                        <i class="fab fa-whatsapp me-2"></i>Asesoría Personalizada
+                    </a>
+                    <a routerLink="/contacto" class="btn btn-outline-light btn-lg px-5 py-3">
+                        <i class="fas fa-store me-2"></i>Visita Nuestro Local
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modal Lightbox -->
+@if (lightboxItem) {
+<div class="lightbox-backdrop" (click)="closeLightbox()">
+    <div class="lightbox-content" (click)="$event.stopPropagation()">
+        <button class="lightbox-close" (click)="closeLightbox()">&times;</button>
+        <img [src]="lightboxItem.img" [alt]="lightboxItem.name" class="img-fluid">
+        <div class="lightbox-footer">
+            <h5>{{ lightboxItem.name }}</h5>
+            <p>{{ lightboxItem.description }}</p>
+            <a href="https://wa.me/573114582898?text=Hola! Me interesa este producto que vi en su catálogo"
+                target="_blank" class="btn btn-success">
+                <i class="fab fa-whatsapp me-2"></i>Consultar este producto
+            </a>
+        </div>
+    </div>
+</div>
+}
+
+--------------------------------------------------
+ARCHIVO: src\app\pages\catalogo\catalogo.ts
+--------------------------------------------------
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
+
+interface ProductItem {
+  img: string;
+  name: string;
+  description: string;
+  category: string;
+  price: string;
+  badgeClass: string;
+  badgeLabel: string;
+  features: string[];
+  tags: string[];
+  consultUrl: string;
+  orderUrl: string;
+  orderLabel: string;
+}
+
+@Component({
+  selector: 'app-catalogo',
+  standalone: true,
+  imports: [CommonModule, RouterLink],
+  templateUrl: './catalogo.html',
+  styleUrl: './catalogo.css',
+})
+export class Catalogo {
+  activeFilter = 'all';
+  lightboxItem: ProductItem | null = null;
+
+  items: ProductItem[] = [
+    {
+      img: 'assets/img/ramo_azul_mini.jpg',
+      name: 'Astromelias',
+      description:
+        'Nuestras flores más populares. Colores vibrantes que duran hasta 2 semanas. Perfectas para alegrar cualquier espacio.',
+      category: 'sencillas',
+      price: 'Variable',
+      badgeClass: 'bg-success',
+      badgeLabel: 'Más Vendida',
+      features: [
+        'Duración: 10-14 días',
+        'Colores: Azul, Rosa, Blanco, Amarillo',
+        'Presentación: Ramillete o por unidad',
+      ],
+      tags: ['Duraderas', 'Coloridas', 'Populares'],
+      consultUrl:
+        'https://wa.me/573114582898?text=Hola! Me interesan las Astromelias. ¿Qué colores tienen disponibles hoy?',
+      orderUrl:
+        'https://wa.me/573114582898?text=Hola! Quiero información sobre Astromelias: precios, colores disponibles y presentaciones',
+      orderLabel: 'Hacer Pedido',
+    },
+    {
+      img: 'assets/img/ramo.jpg',
+      name: 'Margaritas',
+      description:
+        'Simbolizan pureza y nuevos comienzos. Ideales para ocasiones especiales y decoración del hogar.',
+      category: 'sencillas',
+      price: 'Variable',
+      badgeClass: 'bg-warning text-dark',
+      badgeLabel: 'Elegantes',
+      features: [
+        'Duración: 7-10 días',
+        'Colores: Blanco, Rosa, Amarillo',
+        'Significado: Pureza, inocencia',
+      ],
+      tags: ['Pureza', 'Elegantes', 'Clásicas'],
+      consultUrl: 'https://wa.me/573114582898?text=Hola! Quiero información sobre Margaritas',
+      orderUrl:
+        'https://wa.me/573114582898?text=Hola! Me interesan las Margaritas. ¿Tienen disponibles y en qué colores?',
+      orderLabel: 'Hacer Pedido',
+    },
+    {
+      img: 'assets/img/rosa_mini.jpg',
+      name: 'Girasoles',
+      description:
+        'Luz y energía positiva. Transmiten alegría y optimismo en cada pétalo. Perfectos para levantar el ánimo.',
+      category: 'temporada',
+      price: 'Variable',
+      badgeClass: 'bg-info',
+      badgeLabel: 'De Temporada',
+      features: [
+        'Duración: 5-8 días',
+        'Temporada: Disponibilidad variable',
+        'Significado: Alegría, energía positiva',
+      ],
+      tags: ['Alegría', 'Energía', 'Temporada'],
+      consultUrl:
+        'https://wa.me/573114582898?text=Hola! Me encantan los Girasoles. ¿Están en temporada?',
+      orderUrl:
+        'https://wa.me/573114582898?text=Hola! Me interesan los Girasoles. ¿Están disponibles en esta temporada?',
+      orderLabel: 'Consultar Disponibilidad',
+    },
+    {
+      img: 'assets/img/ramo_rosa_02.jpg',
+      name: 'Rosas Clásicas',
+      description:
+        'El símbolo eterno del amor. Disponibles en múltiples colores y arreglos. Perfectas para expresar sentimientos profundos.',
+      category: 'rosas',
+      price: 'Variable',
+      badgeClass: 'bg-danger',
+      badgeLabel: 'Amor Eterno',
+      features: [
+        'Duración: 5-7 días',
+        'Colores: Rojo, Rosa, Blanco, Amarillo',
+        'Presentación: Unidad, docena, ramillete',
+      ],
+      tags: ['Amor', 'Románticas', 'Clásicas'],
+      consultUrl: 'https://wa.me/573114582898?text=Hola! Quiero ver las Rosas disponibles',
+      orderUrl:
+        'https://wa.me/573114582898?text=Hola! Me interesan las Rosas. ¿Qué colores y presentaciones tienen disponibles?',
+      orderLabel: 'Ver Rosas Disponibles',
+    },
+    {
+      img: 'assets/img/ramo_boda_cencillo.jpg',
+      name: 'Ramos de Novia',
+      description:
+        'Elegancia y sencillez para el día más especial. Diseños clásicos y atemporales personalizados para cada novia.',
+      category: 'especiales',
+      price: 'Cotizar',
+      badgeClass: 'bg-light text-dark',
+      badgeLabel: 'Día Especial',
+      features: ['Diseño personalizado', 'Flores frescas del día', 'Colores según vestido'],
+      tags: ['Bodas', 'Personalizado', 'Elegante'],
+      consultUrl: 'https://wa.me/573114582898?text=Hola! Me interesa un ramo de novia',
+      orderUrl:
+        'https://wa.me/573114582898?text=Hola! Necesito un ramo de novia. Mi boda es el [fecha]. ¿Podemos coordinar una cita?',
+      orderLabel: 'Cotizar Ramo',
+    },
+    {
+      img: 'assets/img/ramos_03.jpg',
+      name: 'Arreglos Personalizados',
+      description:
+        'Combinaciones únicas según tu gusto. Cada ramo cuenta una historia diferente y se adapta a la ocasión especial.',
+      category: 'especiales',
+      price: 'Cotizar',
+      badgeClass: 'bg-secondary',
+      badgeLabel: 'Único',
+      features: ['100% personalizable', 'Flores según ocasión', 'Empaque especial incluido'],
+      tags: ['Personalizado', 'Único', 'Especial'],
+      consultUrl: 'https://wa.me/573114582898?text=Hola! Quiero un arreglo personalizado',
+      orderUrl:
+        'https://wa.me/573114582898?text=Hola! Quiero un arreglo personalizado. La ocasión es: [describe tu evento/ocasión]',
+      orderLabel: 'Diseñar Arreglo',
+    },
+  ];
+
+  get filteredItems(): ProductItem[] {
+    if (this.activeFilter === 'all') return this.items;
+    return this.items.filter((i) => i.category === this.activeFilter);
+  }
+
+  setFilter(filter: string) {
+    this.activeFilter = filter;
+  }
+
+  openLightbox(item: ProductItem) {
+    this.lightboxItem = item;
+  }
+
+  closeLightbox() {
+    this.lightboxItem = null;
+  }
+}
+
+
+--------------------------------------------------
+ARCHIVO: src\app\pages\contacto\contacto.css
+--------------------------------------------------
+:host {
+    display: block;
+}
+
+/* ===== HERO ===== */
+.contacto-hero {
+    background: linear-gradient(135deg, var(--flores-green) 0%, var(--flores-green-dark) 100%);
+    padding-top: 120px !important;
+    padding-bottom: 3rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.contacto-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="p" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="rgba(252,211,77,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23p)"/></svg>');
+    opacity: 0.3;
+}
+
+.contacto-hero .container {
+    position: relative;
+    z-index: 1;
+}
+
+.contacto-hero h1 {
+    color: #fff !important;
+    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
+}
+
+.contacto-hero .lead {
+    color: #fff !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.subtitle-hero {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+/* ===== TITLES ===== */
+.title-section {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    color: var(--flores-green);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.title-section i {
+    color: var(--flores-yellow);
+}
+
+/* ===== INFO ITEMS ===== */
+.info-contacto {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+}
+
+.info-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(19, 89, 42, 0.1);
+    transition: all 0.3s ease;
+    margin-bottom: 1.5rem;
+}
+
+.info-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(19, 89, 42, 0.15);
+}
+
+.info-icon {
+    margin-right: 1.5rem;
+    flex-shrink: 0;
+    color: var(--flores-green);
+}
+
+.horario-icon {
+    color: var(--flores-yellow-dark, #F59E0B);
+}
+
+.whatsapp-icon {
+    color: #25D366;
+}
+
+.info-content h5 {
+    color: var(--flores-green);
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+}
+
+.horarios-box {
+    background: rgba(19, 89, 42, 0.05);
+    padding: 1rem;
+    border-radius: 10px;
+    border-left: 4px solid var(--flores-green);
+}
+
+.whatsapp-link {
+    color: #25D366;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.whatsapp-link:hover {
+    color: #128C7E;
+}
+
+/* ===== LOCAL GALLERY ===== */
+.main-image img {
+    height: 400px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.local-gallery:hover .main-image img {
+    transform: scale(1.02);
+}
+
+.gallery-info-box {
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-radius: 1rem;
+    border: 2px solid rgba(19, 89, 42, 0.1);
+}
+
+.gallery-info-box h5 {
+    color: var(--flores-green);
+}
+
+/* ===== MAPA ===== */
+.mapa-section {
+    background: #f8f9fa;
+}
+
+/* Equal height: both columns stretch */
+.mapa-row {
+    display: flex;
+    align-items: stretch;
+}
+
+.mapa-row>* {
+    display: flex;
+    flex-direction: column;
+}
+
+.mapa-container {
+    border: 3px solid var(--flores-yellow);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.mapa-container iframe {
+    flex: 1;
+    min-height: 350px;
+}
+
+.mapa-container:hover {
+    border-color: var(--flores-green);
+    box-shadow: 0 10px 30px rgba(19, 89, 42, 0.2);
+}
+
+/* ===== TRANSPORT ===== */
+.transport-info-box {
+    background: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    border: 2px solid rgba(19, 89, 42, 0.1);
+}
+
+.transport-info-box h4 {
+    color: var(--flores-green);
+}
+
+.transport-item {
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(19, 89, 42, 0.1);
+}
+
+.transport-item:last-of-type {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.tip-box {
+    background: rgba(19, 89, 42, 0.08);
+    padding: 1rem;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    color: var(--flores-green-dark);
+    border-left: 4px solid var(--flores-yellow);
+}
+
+/* ===== CTA CONTACTO ===== */
+.contacto-rapido {
+    background: linear-gradient(135deg, var(--flores-green) 0%, var(--flores-green-dark) 100%);
+}
+
+.contacto-cta-card {
+    background: linear-gradient(135deg, rgba(19, 89, 42, 0.8), rgba(13, 63, 28, 0.9));
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 1.5rem;
+    padding: 3rem;
+    text-align: center;
+    color: #fff;
+}
+
+.contacto-cta-card h3 {
+    color: #fff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.contacto-cta-card p {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.contacto-cta-card .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .info-item {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .info-icon {
+        margin-right: 0;
+        margin-bottom: 1rem;
+    }
+
+    .contacto-hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .main-image img {
+        height: 280px;
+    }
+
+    .contacto-cta-card {
+        padding: 2rem;
+    }
+}
+
+--------------------------------------------------
+ARCHIVO: src\app\pages\contacto\contacto.html
+--------------------------------------------------
+<!-- Hero Section Contacto -->
+<section class="contacto-hero" data-aos="fade-down">
+    <div class="container">
+        <div class="row align-items-center text-center text-white py-5">
+            <div class="col-12">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="fas fa-map-marker-alt me-3"></i>Encuéntranos
+                </h1>
+                <p class="lead mb-3">
+                    Visítanos en nuestro acogedor local en Carnova Premium
+                </p>
+                <p class="fs-5 subtitle-hero">
+                    <i class="fas fa-seedling me-2"></i>
+                    Donde cada flor tiene una historia que contar
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Información Principal del Local -->
+<section class="info-contacto py-5">
+    <div class="container">
+        <div class="row g-5">
+            <!-- Información del Local -->
+            <div class="col-lg-6" data-aos="fade-right">
+                <div class="contacto-info-panel">
+                    <h2 class="title-section mb-4">
+                        <i class="fas fa-store me-2"></i>
+                        Nuestro Local
+                    </h2>
+
+                    <!-- Dirección -->
+                    <div class="info-item" data-aos="fade-up" data-aos-delay="100">
+                        <div class="info-icon">
+                            <i class="fas fa-map-marker-alt fa-2x"></i>
+                        </div>
+                        <div class="info-content">
+                            <h5 class="fw-bold">Dirección</h5>
+                            <p class="mb-1">Transversal 73 #11C-20</p>
+                            <p class="mb-1">Barrio Villa Alsacia</p>
+                            <p class="mb-0">Bogotá, Colombia</p>
+                            <small class="text-muted">
+                                <i class="fas fa-building me-1"></i>Local Carnova Premium
+                            </small>
+                        </div>
+                    </div>
+
+                    <!-- Horarios -->
+                    <div class="info-item" data-aos="fade-up" data-aos-delay="200">
+                        <div class="info-icon horario-icon">
+                            <i class="fas fa-clock fa-2x"></i>
+                        </div>
+                        <div class="info-content">
+                            <h5 class="fw-bold">Horarios de Atención</h5>
+                            <div class="horarios-box">
+                                <div class="d-flex justify-content-between">
+                                    <span>Lunes - Sábado:</span>
+                                    <strong>9:00 AM - 7:00 PM</strong>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <span>Domingos:</span>
+                                    <strong class="text-muted">Cerrado</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- WhatsApp -->
+                    <div class="info-item" data-aos="fade-up" data-aos-delay="300">
+                        <div class="info-icon whatsapp-icon">
+                            <i class="fab fa-whatsapp fa-2x"></i>
+                        </div>
+                        <div class="info-content">
+                            <h5 class="fw-bold">WhatsApp Business</h5>
+                            <p class="mb-2">
+                                <a href="https://wa.me/573114582898" target="_blank" class="whatsapp-link">
+                                    <i class="fas fa-phone me-1"></i>+57 311 458 2898
+                                </a>
+                            </p>
+                            <small class="text-muted">
+                                Respuesta inmediata en horario de atención
+                            </small>
+                        </div>
+                    </div>
+
+                    <!-- Botón WhatsApp Grande -->
+                    <div class="text-center mt-4" data-aos="zoom-in" data-aos-delay="400">
+                        <a href="https://wa.me/573114582898?text=Hola! Quiero información sobre el local y las flores disponibles"
+                            target="_blank" class="btn btn-success btn-lg px-5 py-3">
+                            <i class="fab fa-whatsapp me-2"></i>Contactar Ahora
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Imagen del Local -->
+            <div class="col-lg-6" data-aos="fade-left">
+                <div class="local-gallery">
+                    <div class="main-image mb-3">
+                        <img src="assets/img/local-flores.jpg" alt="Local FLORES - Carnova Premium"
+                            class="img-fluid rounded-4 shadow-lg w-100"
+                            onerror="this.style.background='linear-gradient(135deg, var(--flores-green), var(--flores-green-dark))'; this.style.minHeight='400px';">
+                    </div>
+                    <div class="gallery-info-box">
+                        <h5 class="fw-bold mb-3">
+                            <i class="fas fa-info-circle me-2"></i>Sobre Nuestro Local
+                        </h5>
+                        <ul class="list-unstyled mb-0">
+                            <li class="mb-2">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                Ambiente familiar y acogedor
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                Flores frescas seleccionadas diariamente
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                Atención personalizada
+                            </li>
+                            <li class="mb-0">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                Empaque y moños incluidos
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Mapa de Google Maps -->
+<section class="mapa-section py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5" data-aos="fade-up">
+                <h2 class="title-section mb-3">
+                    <i class="fas fa-route me-2"></i>
+                    Cómo Llegar
+                </h2>
+                <p class="lead text-muted">
+                    Encuentra la ruta más fácil para visitarnos
+                </p>
+            </div>
+        </div>
+
+        <div class="row g-4 mapa-row">
+            <!-- Mapa -->
+            <div class="col-lg-8" data-aos="fade-right">
+                <div class="mapa-container rounded-4 overflow-hidden shadow-lg">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.789!2d-74.1234567!3d4.6543212!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f9b8a1234567%3A0x123456789abcdef!2sTransversal%2073%20%2311c-20%2C%20Bogot%C3%A1%2C%20Colombia!5e0!3m2!1ses!2sco!4v1640995200000"
+                        width="100%" style="border:0;" allowfullscreen="" loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                    <div class="text-center mt-3">
+                        <a href="https://maps.google.com?q=Transversal+73+11C-20+Villa+Alsacia+Bogotá" target="_blank"
+                            class="btn btn-outline-success btn-sm">
+                            <i class="fas fa-external-link-alt me-1"></i>Abrir en Google Maps
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información de Transporte -->
+            <div class="col-lg-4" data-aos="fade-left">
+                <div class="transport-info-box h-100">
+                    <h4 class="fw-bold mb-4">
+                        <i class="fas fa-bus me-2"></i>Transporte Público
+                    </h4>
+
+                    <div class="transport-item mb-3">
+                        <h6 class="fw-bold">
+                            <i class="fas fa-subway me-2 text-primary"></i>TransMilenio
+                        </h6>
+                        <p class="mb-1 text-muted">Estación más cercana:</p>
+                        <p class="fw-bold">Banderas</p>
+                    </div>
+
+                    <div class="transport-item mb-3">
+                        <h6 class="fw-bold">
+                            <i class="fas fa-bus me-2 text-warning"></i>Bus Urbano
+                        </h6>
+                        <p class="mb-1 text-muted">Rutas que llegan:</p>
+                        <p class="fw-bold">13-2, A43, 6-2</p>
+                    </div>
+
+                    <div class="transport-item mb-4">
+                        <h6 class="fw-bold">
+                            <i class="fas fa-car me-2 text-success"></i>En Carro
+                        </h6>
+                        <p class="mb-1 text-muted">Desde el centro:</p>
+                        <p class="fw-bold">25-30 minutos aprox.</p>
+                    </div>
+
+                    <div class="tip-box">
+                        <i class="fas fa-lightbulb me-2"></i>
+                        <strong>Tip:</strong> El local está ubicado en la zona comercial de Villa Alsacia, fácil acceso
+                        y parqueadero disponible.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Sección de Contacto Rápido -->
+<section class="contacto-rapido py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12" data-aos="zoom-in">
+                <div class="contacto-cta-card">
+                    <h3 class="display-6 fw-bold mb-4">
+                        ¿Tienes alguna pregunta?
+                    </h3>
+                    <p class="lead mb-4">
+                        Estamos aquí para ayudarte. Contáctanos por WhatsApp
+                        y te responderemos inmediatamente.
+                    </p>
+                    <div class="row g-3 justify-content-center">
+                        <div class="col-md-4">
+                            <a href="https://wa.me/573114582898?text=Hola! Quiero información sobre las flores del día"
+                                target="_blank" class="btn btn-warning btn-lg w-100">
+                                <i class="fab fa-whatsapp me-2"></i>Flores del Día
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="https://wa.me/573114582898?text=Hola! Quiero conocer los precios y disponibilidad"
+                                target="_blank" class="btn btn-outline-light btn-lg w-100">
+                                <i class="fas fa-dollar-sign me-2"></i>Precios
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="https://wa.me/573114582898?text=Hola! Necesito indicaciones para llegar al local"
+                                target="_blank" class="btn btn-outline-light btn-lg w-100">
+                                <i class="fas fa-directions me-2"></i>Direcciones
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+--------------------------------------------------
+ARCHIVO: src\app\pages\contacto\contacto.ts
+--------------------------------------------------
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-contacto',
+  templateUrl: './contacto.html',
+  styleUrl: './contacto.css',
+})
+export class Contacto {}
+
+
+--------------------------------------------------
+ARCHIVO: src\app\pages\galeria\galeria.css
+--------------------------------------------------
+:host {
+    display: block;
+}
+
+/* ===== HERO ===== */
+.galeria-hero {
+    background: linear-gradient(135deg, var(--flores-green) 0%, var(--flores-green-dark) 100%);
+    padding-top: 120px !important;
+    padding-bottom: 3rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.galeria-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="p" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="rgba(252,211,77,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23p)"/></svg>');
+    opacity: 0.3;
+}
+
+.galeria-hero .container {
+    position: relative;
+    z-index: 1;
+}
+
+.galeria-hero h1 {
+    color: #fff !important;
+    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
+}
+
+.galeria-hero .lead {
+    color: #fff !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.subtitle-hero {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+/* ===== FILTERS ===== */
+.filtros-galeria {
+    border-bottom: 2px solid rgba(19, 89, 42, 0.1);
+}
+
+.filter-btn {
+    transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+    transform: translateY(-2px);
+}
+
+/* ===== GALLERY CARDS ===== */
+.gallery-card {
+    background: #fff;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.gallery-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(19, 89, 42, 0.2);
+    border-color: var(--flores-yellow);
+}
+
+.gallery-image {
+    position: relative;
+    height: 260px;
+    overflow: hidden;
+}
+
+.gallery-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.gallery-card:hover .gallery-image img {
+    transform: scale(1.1);
+}
+
+.gallery-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(19, 89, 42, 0.85) 0%, rgba(0, 0, 0, 0.3) 100%);
+    display: flex;
+    align-items: flex-end;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.gallery-card:hover .gallery-overlay {
+    opacity: 1;
+}
+
+.gallery-content {
+    padding: 1.5rem;
+    width: 100%;
+}
+
+.text-white-75 {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+/* ===== CTA ===== */
+.cta-galeria {
+    background: linear-gradient(135deg, var(--flores-green) 0%, var(--flores-green-dark) 100%);
+    color: #fff;
+}
+
+.cta-galeria h3 {
+    color: #fff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.cta-galeria .lead {
+    color: var(--flores-yellow-light, #FDE68A);
+}
+
+/* ===== LIGHTBOX ===== */
+.lightbox-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    animation: fadeIn 0.3s ease;
+}
+
+.lightbox-content {
+    max-width: 900px;
+    width: 100%;
+    position: relative;
+}
+
+.lightbox-content img {
+    border-radius: 1rem;
+    max-height: 70vh;
+    width: 100%;
+    object-fit: contain;
+}
+
+.lightbox-close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 2.5rem;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.lightbox-footer {
+    text-align: center;
+    margin-top: 1rem;
+    color: #fff;
+}
+
+.lightbox-footer h5 {
+    color: #fff;
+}
+
+.lightbox-footer p {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .galeria-hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .gallery-image {
+        height: 200px;
+    }
+
+    .cta-galeria .btn {
+        display: block;
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+
+    .cta-galeria .me-3 {
+        margin-right: 0 !important;
+    }
+}
+
+--------------------------------------------------
+ARCHIVO: src\app\pages\galeria\galeria.html
+--------------------------------------------------
+<!-- Hero Section Galería -->
+<section class="galeria-hero py-5">
+    <div class="container">
+        <div class="row align-items-center text-center text-white py-5">
+            <div class="col-12" data-aos="fade-down">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="fas fa-images me-3"></i>Nuestra Galería
+                </h1>
+                <p class="lead mb-4">Descubre la belleza de nuestras flores y arreglos</p>
+                <p class="fs-5 subtitle-hero">
+                    <i class="fas fa-camera me-2"></i>
+                    12 imágenes que cuentan historias de amor y dedicación
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Filtros de Categoría -->
+<section class="filtros-galeria py-4 bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="d-flex justify-content-center flex-wrap gap-3" data-aos="fade-up">
+                    <button class="btn filter-btn" [class.btn-primary]="activeFilter==='all'"
+                        [class.btn-outline-primary]="activeFilter!=='all'" (click)="setFilter('all')">
+                        <i class="fas fa-th me-2"></i>Todas
+                    </button>
+                    <button class="btn filter-btn" [class.btn-primary]="activeFilter==='local'"
+                        [class.btn-outline-primary]="activeFilter!=='local'" (click)="setFilter('local')">
+                        <i class="fas fa-store me-2"></i>Nuestro Local <span class="badge bg-secondary ms-1">3</span>
+                    </button>
+                    <button class="btn filter-btn" [class.btn-primary]="activeFilter==='productos'"
+                        [class.btn-outline-primary]="activeFilter!=='productos'" (click)="setFilter('productos')">
+                        <i class="fas fa-seedling me-2"></i>Productos <span class="badge bg-secondary ms-1">5</span>
+                    </button>
+                    <button class="btn filter-btn" [class.btn-primary]="activeFilter==='arreglos'"
+                        [class.btn-outline-primary]="activeFilter!=='arreglos'" (click)="setFilter('arreglos')">
+                        <i class="fas fa-gift me-2"></i>Arreglos Especiales <span
+                            class="badge bg-secondary ms-1">2</span>
+                    </button>
+                    <button class="btn filter-btn" [class.btn-primary]="activeFilter==='bodas'"
+                        [class.btn-outline-primary]="activeFilter!=='bodas'" (click)="setFilter('bodas')">
+                        <i class="fas fa-heart me-2"></i>Bodas <span class="badge bg-secondary ms-1">2</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Grid de Galería -->
+<section class="galeria-grid py-5">
+    <div class="container">
+        <div class="row g-4">
+            @for (item of filteredItems; track item.img) {
+            <div class="col-lg-4 col-md-6 gallery-item" data-aos="zoom-in">
+                <div class="gallery-card">
+                    <div class="gallery-image">
+                        <img [src]="item.img" [alt]="item.title" class="img-fluid">
+                        <div class="gallery-overlay">
+                            <div class="gallery-content">
+                                <h5 class="text-white mb-2">{{ item.title }}</h5>
+                                <p class="text-white-75 mb-3">{{ item.description }}</p>
+                                <button class="btn btn-warning btn-sm" (click)="openLightbox(item)">
+                                    <i class="fas fa-expand me-1"></i>Ver
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gallery-info p-3">
+                        <span class="badge mb-2" [ngClass]="item.badgeClass">{{ item.badgeLabel }}</span>
+                        <h6 class="fw-bold mb-1">{{ item.title }}</h6>
+                        <p class="text-muted mb-0 small">{{ item.description }}</p>
+                        @if (item.tags) {
+                        <div class="mt-2">
+                            @for (tag of item.tags; track tag) {
+                            <span class="badge bg-light text-dark me-1">{{ tag }}</span>
+                            }
+                        </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- Sección de llamada a la acción -->
+<section class="cta-galeria py-5">
+    <div class="container">
+        <div class="row align-items-center text-center">
+            <div class="col-12" data-aos="zoom-in">
+                <h3 class="display-6 fw-bold mb-4">¿Te gustó lo que viste?</h3>
+                <p class="lead mb-5">Cada imagen refleja nuestra pasión por las flores. ¡Haz tu pedido ahora!</p>
+                <div>
+                    <a href="https://wa.me/573114582898?text=Hola! Vi su galería y me encantó. Quiero hacer un pedido"
+                        target="_blank" class="btn btn-success btn-lg px-5 py-3 me-3">
+                        <i class="fab fa-whatsapp me-2"></i>Hacer Pedido
+                    </a>
+                    <a routerLink="/contacto" class="btn btn-outline-light btn-lg px-5 py-3">
+                        <i class="fas fa-map-marker-alt me-2"></i>Visitanos
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modal Lightbox -->
+@if (lightboxItem) {
+<div class="lightbox-backdrop" (click)="closeLightbox()">
+    <div class="lightbox-content" (click)="$event.stopPropagation()">
+        <button class="lightbox-close" (click)="closeLightbox()">&times;</button>
+        <img [src]="lightboxItem.img" [alt]="lightboxItem.title" class="img-fluid">
+        <div class="lightbox-footer">
+            <h5>{{ lightboxItem.title }}</h5>
+            <p>{{ lightboxItem.description }}</p>
+            <a href="https://wa.me/573114582898?text=Hola! Me interesa este tipo de arreglo que vi en su galería"
+                target="_blank" class="btn btn-success">
+                <i class="fab fa-whatsapp me-2"></i>Consultar por este arreglo
+            </a>
+        </div>
+    </div>
+</div>
+}
+
+--------------------------------------------------
+ARCHIVO: src\app\pages\galeria\galeria.ts
+--------------------------------------------------
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
+
+interface GalleryItem {
+  img: string;
+  title: string;
+  description: string;
+  category: string;
+  badgeClass: string;
+  badgeLabel: string;
+  tags?: string[];
+}
+
+@Component({
+  selector: 'app-galeria',
+  standalone: true,
+  imports: [CommonModule, RouterLink],
+  templateUrl: './galeria.html',
+  styleUrl: './galeria.css',
+})
+export class Galeria {
+  activeFilter = 'all';
+  lightboxItem: GalleryItem | null = null;
+
+  items: GalleryItem[] = [
+    {
+      img: 'assets/img/galeria/local/local-flores-2.jpg',
+      title: 'Vista Exterior',
+      description: 'Fácil acceso en el corazón de Villa Alsacia',
+      category: 'local',
+      badgeClass: 'bg-success',
+      badgeLabel: 'Nuestro Local',
+    },
+    {
+      img: 'assets/img/galeria/local/local-flores.jpg',
+      title: 'Nuestro Local Principal',
+      description: 'Vista interior de nuestro acogedor espacio en Carnova Premium',
+      category: 'local',
+      badgeClass: 'bg-success',
+      badgeLabel: 'Nuestro Local',
+    },
+    {
+      img: 'assets/img/galeria/local/slide1.jpg',
+      title: 'Nuestro Espacio',
+      description: 'Ambiente cálido donde seleccionamos las mejores flores',
+      category: 'local',
+      badgeClass: 'bg-success',
+      badgeLabel: 'Nuestro Local',
+    },
+    {
+      img: 'assets/img/galeria/productos/ramo-productos-1.jpg',
+      title: 'Ramo Premium',
+      description: 'Selección especial de nuestras mejores flores',
+      category: 'productos',
+      badgeClass: 'bg-primary',
+      badgeLabel: 'Productos',
+      tags: ['premium', 'especial', 'calidad'],
+    },
+    {
+      img: 'assets/img/galeria/productos/ramo-productos-2.jpg',
+      title: 'Astromelias Premium',
+      description: 'Tonos exclusivos y colores únicos',
+      category: 'productos',
+      badgeClass: 'bg-primary',
+      badgeLabel: 'Productos',
+      tags: ['astromelias', 'premium', 'exclusivo'],
+    },
+    {
+      img: 'assets/img/galeria/productos/ramo.jpg',
+      title: 'Ramo Mixto',
+      description: 'Combinación perfecta de colores y texturas',
+      category: 'productos',
+      badgeClass: 'bg-primary',
+      badgeLabel: 'Productos',
+      tags: ['mixto', 'colores', 'variedad'],
+    },
+    {
+      img: 'assets/img/galeria/productos/ramo_azul_mini.jpg',
+      title: 'Astromelias Azules',
+      description: 'Nuestras flores más vendidas en tonos vibrantes',
+      category: 'productos',
+      badgeClass: 'bg-primary',
+      badgeLabel: 'Productos',
+      tags: ['astromelias', 'azul', 'popular'],
+    },
+    {
+      img: 'assets/img/galeria/productos/rosa_mini.jpg',
+      title: 'Rosas Miniatura',
+      description: 'Delicadas rosas perfectas para cualquier ocasión',
+      category: 'productos',
+      badgeClass: 'bg-primary',
+      badgeLabel: 'Productos',
+      tags: ['rosas', 'miniatura', 'amor'],
+    },
+    {
+      img: 'assets/img/galeria/arreglos/ramo_rosa_02.jpg',
+      title: 'Ramo Rosa Especial',
+      description: 'Tonos románticos para momentos especiales',
+      category: 'arreglos',
+      badgeClass: 'bg-warning text-dark',
+      badgeLabel: 'Arreglos Especiales',
+      tags: ['rosa', 'romántico', 'especial'],
+    },
+    {
+      img: 'assets/img/galeria/arreglos/ramos_03.jpg',
+      title: 'Ramos Personalizados',
+      description: 'Cada ramo cuenta una historia única',
+      category: 'arreglos',
+      badgeClass: 'bg-warning text-dark',
+      badgeLabel: 'Arreglos Especiales',
+      tags: ['personalizado', 'único', 'especial'],
+    },
+    {
+      img: 'assets/img/galeria/bodas/ramo_boda_cencillo.jpg',
+      title: 'Ramo de Novia Clásico',
+      description: 'Elegancia y sencillez para tu día perfecto',
+      category: 'bodas',
+      badgeClass: 'bg-danger',
+      badgeLabel: 'Bodas',
+      tags: ['novia', 'boda', 'clásico', 'elegante'],
+    },
+    {
+      img: 'assets/img/galeria/bodas/ramo_boda_cencillo_02.jpg',
+      title: 'Ramo Delicado',
+      description: 'Toques sutiles para ceremonias íntimas',
+      category: 'bodas',
+      badgeClass: 'bg-danger',
+      badgeLabel: 'Bodas',
+      tags: ['delicado', 'íntimo', 'sutil'],
+    },
+  ];
+
+  get filteredItems(): GalleryItem[] {
+    if (this.activeFilter === 'all') return this.items;
+    return this.items.filter((i) => i.category === this.activeFilter);
+  }
+
+  setFilter(filter: string) {
+    this.activeFilter = filter;
+  }
+
+  openLightbox(item: GalleryItem) {
+    this.lightboxItem = item;
+  }
+
+  closeLightbox() {
+    this.lightboxItem = null;
+  }
+}
+
+
+--------------------------------------------------
+ARCHIVO: src\app\pages\home\about-section\about-section.css
+--------------------------------------------------
+:host {
+    display: block;
+}
+
+.about-flores {
+    background: linear-gradient(135deg, #f8fffe 0%, #e8f5e8 100%);
+}
+
+.flores-destacadas .badge {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+}
+
+.about-image-placeholder {
+    position: relative;
+    min-height: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.about-image-placeholder img {
+    position: relative;
+    z-index: 1;
+}
+
+.about-image-placeholder .placeholder-content {
+    display: none;
+    text-align: center;
+    color: var(--flores-green);
+    opacity: 0.5;
+}
+
+.about-image-placeholder.no-image img {
+    display: none;
+}
+
+.about-image-placeholder.no-image .placeholder-content {
+    display: block;
+}
+
+--------------------------------------------------
+ARCHIVO: src\app\pages\home\about-section\about-section.html
+--------------------------------------------------
+<section class="about-flores py-flores">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6" data-aos="fade-right">
+                <h2 class="title-flores mb-4">Sobre Nosotros</h2>
+                <p class="lead mb-4">
+                    Somos <strong>FLORES</strong>, un emprendimiento familiar en Bogotá que nace del amor por la
+                    naturaleza
+                    y la pasión por crear momentos especiales.
+                </p>
+                <p class="mb-4">
+                    Desde nuestro local en Carnova Premium, seleccionamos las flores más frescas cada día
+                    para que puedas expresar tus sentimientos de la manera más hermosa.
+                </p>
+                <div class="flores-destacadas mb-4">
+                    <h5 class="text-flores-green mb-3">Nuestras Especialidades:</h5>
+                    <div class="row g-2">
+                        <div class="col-sm-6">
+                            <span class="badge bg-flores-green me-2">🌸</span> Astromelias (las favoritas)
+                        </div>
+                        <div class="col-sm-6">
+                            <span class="badge bg-flores-yellow text-dark me-2">🌼</span> Margaritas elegantes
+                        </div>
+                        <div class="col-sm-6">
+                            <span class="badge bg-flores-green me-2">🌻</span> Girasoles radiantes
+                        </div>
+                        <div class="col-sm-6">
+                            <span class="badge bg-flores-yellow text-dark me-2">🌹</span> Rosas clásicas
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center" data-aos="fade-left">
+                <div class="about-image-placeholder">
+                    <img src="assets/img/local-flores.jpg" alt="Local FLORES" class="img-fluid rounded-4 shadow-lg"
+                        onerror="this.parentElement.classList.add('no-image')">
+                    <div class="placeholder-content">
+                        <i class="fas fa-store fa-3x mb-3"></i>
+                        <p>Foto del local próximamente</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+--------------------------------------------------
+ARCHIVO: src\app\pages\home\about-section\about-section.ts
+--------------------------------------------------
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-about-section',
+  templateUrl: './about-section.html',
+  styleUrl: './about-section.css',
+})
+export class AboutSection {}
+
+
+--------------------------------------------------
+ARCHIVO: src\app\pages\home\cta-section\cta-section.css
+--------------------------------------------------
+:host {
+    display: block;
+}
+
+.cta-section {
+    background: linear-gradient(135deg, var(--flores-green) 0%, var(--flores-green-dark) 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        radial-gradient(circle at 20% 80%, rgba(252, 211, 77, 0.2) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(252, 211, 77, 0.2) 0%, transparent 50%);
+    animation: float 6s ease-in-out infinite;
+}
+
+.cta-section .container {
+    position: relative;
+    z-index: 2;
+}
+
+.cta-section h3 {
+    color: var(--flores-white);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.cta-section p {
+    color: var(--flores-yellow-light);
+}
+
+--------------------------------------------------
+ARCHIVO: src\app\pages\home\cta-section\cta-section.html
+--------------------------------------------------
+<section class="cta-section py-5">
+    <div class="container">
+        <div class="row align-items-center text-center">
+            <div class="col-12" data-aos="zoom-in-up" data-aos-delay="200">
+                <h3 class="display-6 fw-bold mb-4" data-aos="fade-down" data-aos-delay="300">
+                    ¿Lista para crear momentos mágicos?
+                </h3>
+                <p class="lead mb-5" data-aos="fade-up" data-aos-delay="400">
+                    Cada flor tiene una historia que contar. Déjanos ayudarte a escribir la tuya.
+                </p>
+                <div data-aos="bounce-up" data-aos-delay="500">
+                    <a href="https://wa.me/573114582898?text=Hola! Quiero hacer un pedido de flores" target="_blank"
+                        class="btn btn-warning btn-lg px-5 py-3 me-3">
+                        <i class="fab fa-whatsapp me-2"></i>Hacer Pedido Ahora
+                    </a>
+                    <a routerLink="/galeria" class="btn btn-outline-light btn-lg px-5 py-3">
+                        <i class="fas fa-images me-2"></i>Ver Galería
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+--------------------------------------------------
+ARCHIVO: src\app\pages\home\cta-section\cta-section.ts
+--------------------------------------------------
+import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
+
+@Component({
+  selector: 'app-cta-section',
+  imports: [RouterLink],
+  templateUrl: './cta-section.html',
+  styleUrl: './cta-section.css',
+})
+export class CtaSection {}
+
+
+--------------------------------------------------
+ARCHIVO: src\app\pages\home\flower-types\flower-types.css
+--------------------------------------------------
+:host {
+    display: block;
+}
+
+.flor-card {
+    background: var(--flores-white);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(19, 89, 42, 0.15);
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.flor-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 25px 50px rgba(19, 89, 42, 0.25);
+    border-color: var(--flores-yellow);
+}
+
+.flor-image {
+    position: relative;
+    height: 250px;
+    overflow: hidden;
+}
+
+.flor-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: all 0.3s ease;
+}
+
+.flor-card:hover .flor-image img {
+    transform: scale(1.1);
+}
+
+.flor-overlay {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.badge-popular {
+    background: linear-gradient(45deg, var(--flores-yellow), var(--flores-yellow-dark));
+    color: var(--flores-green-dark);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge-premium {
+    background: linear-gradient(45deg, var(--flores-green), var(--flores-green-dark));
+    color: var(--flores-white);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+@media (max-width: 768px) {
+    .flor-image {
+        height: 200px;
+    }
+}
+
+@media (max-width: 576px) {
+    .flor-image {
+        height: 180px;
+    }
+}
+
+--------------------------------------------------
+ARCHIVO: src\app\pages\home\flower-types\flower-types.html
+--------------------------------------------------
+<section class="tipos-flores py-5 bg-light">
+    <div class="container">
+        <div class="row text-center mb-5" data-aos="fade-up">
+            <div class="col-12">
+                <h2 class="title-flores mb-3">Nuestras Flores</h2>
+                <p class="lead text-muted">Cada variedad seleccionada con amor para inspirarte</p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Astromelias -->
+            <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="150">
+                <div class="flor-card h-100">
+                    <div class="flor-image">
+                        <img src="assets/img/ramo_azul_mini.jpg" alt="Astromelias" class="img-fluid"
+                            onerror="this.src='https://placehold.co/400x300/13592a/FCD34D?text=🌸+Astromelias'">
+                        <div class="flor-overlay">
+                            <span class="badge-popular">Más Vendida</span>
+                        </div>
+                    </div>
+                    <div class="flor-content p-4 text-center">
+                        <h5 class="fw-bold text-flores-green">Astromelias</h5>
+                        <p class="text-muted mb-3">Colores vibrantes y duración excepcional. Perfectas para alegrar
+                            cualquier espacio.</p>
+                        <a href="https://wa.me/573114582898?text=Hola! Me interesan las Astromelias" target="_blank"
+                            class="btn btn-outline-primary btn-sm">
+                            <i class="fab fa-whatsapp me-1"></i>Consultar
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Margaritas -->
+            <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="300">
+                <div class="flor-card h-100">
+                    <div class="flor-image">
+                        <img src="assets/img/ramo.jpg" alt="Margaritas" class="img-fluid"
+                            onerror="this.src='https://placehold.co/400x300/13592a/FCD34D?text=🌼+Margaritas'">
+                        <div class="flor-overlay">
+                            <span class="badge-premium">Elegantes</span>
+                        </div>
+                    </div>
+                    <div class="flor-content p-4 text-center">
+                        <h5 class="fw-bold text-flores-green">Margaritas</h5>
+                        <p class="text-muted mb-3">Simbolizan pureza y nuevos comienzos. Ideales para ocasiones
+                            especiales.</p>
+                        <a href="https://wa.me/573114582898?text=Hola! Quiero información sobre Margaritas"
+                            target="_blank" class="btn btn-outline-primary btn-sm">
+                            <i class="fab fa-whatsapp me-1"></i>Consultar
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Girasoles -->
+            <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="450">
+                <div class="flor-card h-100">
+                    <div class="flor-image">
+                        <img src="assets/img/rosa_mini.jpg" alt="Girasoles" class="img-fluid"
+                            onerror="this.src='https://placehold.co/400x300/13592a/FCD34D?text=🌻+Girasoles'">
+                    </div>
+                    <div class="flor-content p-4 text-center">
+                        <h5 class="fw-bold text-flores-green">Girasoles</h5>
+                        <p class="text-muted mb-3">Luz y energía positiva. Transmiten alegría y optimismo en cada
+                            pétalo.</p>
+                        <a href="https://wa.me/573114582898?text=Hola! Me encantan los Girasoles" target="_blank"
+                            class="btn btn-outline-primary btn-sm">
+                            <i class="fab fa-whatsapp me-1"></i>Consultar
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rosas -->
+            <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="600">
+                <div class="flor-card h-100">
+                    <div class="flor-image">
+                        <img src="assets/img/ramo_rosa_02.jpg" alt="Rosas" class="img-fluid"
+                            onerror="this.src='https://placehold.co/400x300/13592a/FCD34D?text=🌹+Rosas'">
+                    </div>
+                    <div class="flor-content p-4 text-center">
+                        <h5 class="fw-bold text-flores-green">Rosas</h5>
+                        <p class="text-muted mb-3">El símbolo eterno del amor. Disponibles en múltiples colores y
+                            arreglos.</p>
+                        <a href="https://wa.me/573114582898?text=Hola! Quiero ver las Rosas disponibles" target="_blank"
+                            class="btn btn-outline-primary btn-sm">
+                            <i class="fab fa-whatsapp me-1"></i>Consultar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+--------------------------------------------------
+ARCHIVO: src\app\pages\home\flower-types\flower-types.ts
+--------------------------------------------------
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-flower-types',
+  templateUrl: './flower-types.html',
+  styleUrl: './flower-types.css',
+})
+export class FlowerTypes {}
+
+
+--------------------------------------------------
+ARCHIVO: src\app\pages\home\hero-carousel\hero-carousel.css
+--------------------------------------------------
+:host {
+    display: block;
+}
+
+/* ===== HERO SECTION ===== */
+.hero-section {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    min-height: 600px;
+    overflow: hidden;
+    margin: 0;
+}
+
+/* ===== GRADIENT EDGE OVERLAYS ===== */
+.edge-gradient {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 15%;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.edge-left {
+    left: 0;
+    background: linear-gradient(to right,
+            rgba(0, 0, 0, 0.6) 0%,
+            transparent 100%);
+}
+
+.edge-right {
+    right: 0;
+    background: linear-gradient(to left,
+            rgba(0, 0, 0, 0.6) 0%,
+            transparent 100%);
+}
+
+/* ===== CAROUSEL SCROLL-SNAP ===== */
+.carousel {
+    display: flex;
+    position: relative;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    height: 100%;
+    cursor: grab;
+}
+
+.carousel.dragging {
+    cursor: grabbing;
+    scroll-behavior: auto;
+}
+
+.carousel::-webkit-scrollbar {
+    display: none;
+}
+
+.carousel {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* ===== GROUP ===== */
+.group {
+    display: flex;
+    flex-shrink: 0;
+    width: max-content;
+}
+
+/* ===== CARDS ===== */
+.card {
+    flex: 0 0 100vw;
+    scroll-snap-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    height: 100vh;
+    min-height: 600px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: var(--flores-green-dark);
+    border: none;
+    border-radius: 0;
+}
+
+.card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg,
+            rgba(0, 0, 0, 0.3) 0%,
+            rgba(0, 0, 0, 0.1) 40%,
+            rgba(0, 0, 0, 0.4) 100%);
+    z-index: 1;
+}
+
+/* ===== CARD CONTENT ===== */
+.card-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 2rem;
+    max-width: 800px;
+    user-select: none;
+}
+
+.card-content h1 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 5rem;
+    font-weight: 900;
+    color: #ffffff;
+    text-shadow:
+        3px 3px 0px rgba(0, 0, 0, 1),
+        2px 2px 10px rgba(0, 0, 0, 0.9);
+    letter-spacing: 5px;
+    margin-bottom: 0.5rem;
+    line-height: 1;
+}
+
+.card-content .subtitle {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--flores-yellow);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    margin-bottom: 1.5rem;
+    letter-spacing: 1px;
+}
+
+.card-content .description {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.95);
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+    max-width: 600px;
+    margin: 0 auto 2rem;
+    line-height: 1.7;
+    font-weight: 300;
+}
+
+.card-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.card-buttons .btn {
+    padding: 14px 32px;
+    font-size: 0.95rem;
+    pointer-events: auto;
+}
+
+/* ===== CARD COLOR ACCENTS ===== */
+.card1 h1 {
+    color: #ffffff;
+}
+
+.card2 h1 {
+    color: var(--flores-yellow);
+}
+
+.card3 h1 {
+    color: #ffffff;
+}
+
+/* ===== NAVIGATION ARROWS ===== */
+.carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 5;
+    background: rgba(19, 89, 42, 0.8);
+    border: 3px solid var(--flores-yellow);
+    color: var(--flores-white);
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+}
+
+.carousel-arrow:hover {
+    background: rgba(19, 89, 42, 1);
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.arrow-left {
+    left: 20px;
+}
+
+.arrow-right {
+    right: 20px;
+}
+
+/* ===== DOT INDICATORS ===== */
+.carousel-dots {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
+    display: flex;
+    gap: 12px;
+}
+
+.dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid var(--flores-yellow);
+    background: rgba(252, 211, 77, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.dot:hover {
+    background: rgba(252, 211, 77, 0.6);
+    transform: scale(1.2);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 992px) {
+    .card-content h1 {
+        font-size: 3.5rem;
+        letter-spacing: 3px;
+    }
+
+    .card-content .subtitle {
+        font-size: 1.2rem;
+    }
+
+    .card-content .description {
+        font-size: 1rem;
+    }
+
+    .edge-gradient {
+        width: 8%;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        min-height: 500px;
+    }
+
+    .card {
+        min-height: 500px;
+    }
+
+    .card-content h1 {
+        font-size: 2.5rem;
+        letter-spacing: 2px;
+    }
+
+    .card-content .subtitle {
+        font-size: 1.1rem;
+    }
+
+    .card-content .description {
+        font-size: 0.9rem;
+    }
+
+    .card-buttons .btn {
+        padding: 12px 24px;
+        font-size: 0.85rem;
+    }
+
+    .carousel-arrow {
+        width: 45px;
+        height: 45px;
+        font-size: 1rem;
+    }
+
+    .arrow-left {
+        left: 10px;
+    }
+
+    .arrow-right {
+        right: 10px;
+    }
+
+    .edge-gradient {
+        width: 5%;
+    }
+}
+
+@media (max-width: 576px) {
+    .card-content h1 {
+        font-size: 2rem;
+        letter-spacing: 1px;
+    }
+
+    .card-content .subtitle {
+        font-size: 0.95rem;
+    }
+
+    .card-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .carousel-arrow {
+        width: 40px;
+        height: 40px;
+        font-size: 0.9rem;
+    }
+}
+
+--------------------------------------------------
+ARCHIVO: src\app\pages\home\hero-carousel\hero-carousel.html
+--------------------------------------------------
+<section class="hero-section">
+    <!-- Gradient edge overlays -->
+    <div class="edge-gradient edge-left"></div>
+    <div class="edge-gradient edge-right"></div>
+
+    <!-- Carousel with scroll-snap -->
+    <div class="carousel">
+        <div class="group">
+            <!-- Slide 1 -->
+            <div class="card card1" style="background-image: url('assets/img/local-flores.jpg');">
+                <div class="card-overlay"></div>
+                <div class="card-content">
+                    <h1>FLORES</h1>
+                    <p class="subtitle">Que inspiran amor propio</p>
+                    <p class="description">
+                        Descubre la belleza natural que despierta tus sentimientos más profundos.<br>
+                        Flores frescas que celebran cada momento especial de tu vida.
+                    </p>
+                    <div class="card-buttons">
+                        <a href="https://wa.me/573114582898?text=Hola! Quiero conocer las flores disponibles hoy"
+                            target="_blank" class="btn btn-success btn-lg">
+                            <i class="fab fa-whatsapp me-2"></i>Ver Flores del Día
+                        </a>
+                        <a routerLink="/catalogo" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-seedling me-2"></i>Nuestro Catálogo
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 2 -->
+            <div class="card card2" style="background-image: url('assets/img/ramo.jpg');">
+                <div class="card-overlay"></div>
+                <div class="card-content">
+                    <h1>ASTROMELIAS</h1>
+                    <p class="subtitle">Nuestras flores más populares</p>
+                    <p class="description">
+                        Colores vibrantes que alegran cualquier espacio<br>
+                        y despiertan sonrisas sinceras.
+                    </p>
+                    <div class="card-buttons">
+                        <a href="https://wa.me/573114582898?text=Hola! Me interesan las Astromelias. ¿Qué colores tienen disponibles?"
+                            target="_blank" class="btn btn-success btn-lg">
+                            <i class="fab fa-whatsapp me-2"></i>Consultar Disponibilidad
+                        </a>
+                        <a routerLink="/galeria" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-images me-2"></i>Ver Galería
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3 -->
+            <div class="card card3" style="background-image: url('assets/img/ramos_03.jpg');">
+                <div class="card-overlay"></div>
+                <div class="card-content">
+                    <h1>MOMENTOS ÚNICOS</h1>
+                    <p class="subtitle">Que inspiran amor propio</p>
+                    <p class="description">
+                        Rosas, girasoles y flores especiales para celebrar el amor.<br>
+                        Cada ramillete cuenta una historia única.
+                    </p>
+                    <div class="card-buttons">
+                        <a href="https://wa.me/573114582898?text=Hola! Quiero un ramillete especial para regalar"
+                            target="_blank" class="btn btn-success btn-lg">
+                            <i class="fab fa-whatsapp me-2"></i>Hacer Pedido
+                        </a>
+                        <a routerLink="/contacto" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-map-marker-alt me-2"></i>Cómo Llegar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manual nav arrows -->
+    <button class="carousel-arrow arrow-left" (click)="scrollPrev()" aria-label="Anterior">
+        <i class="fas fa-chevron-left"></i>
+    </button>
+    <button class="carousel-arrow arrow-right" (click)="scrollNext()" aria-label="Siguiente">
+        <i class="fas fa-chevron-right"></i>
+    </button>
+
+    <!-- Dot indicators -->
+    <div class="carousel-dots">
+        <button class="dot" (click)="scrollToSlide(0)" aria-label="Slide 1"></button>
+        <button class="dot" (click)="scrollToSlide(1)" aria-label="Slide 2"></button>
+        <button class="dot" (click)="scrollToSlide(2)" aria-label="Slide 3"></button>
+    </div>
+</section>
+
+--------------------------------------------------
+ARCHIVO: src\app\pages\home\hero-carousel\hero-carousel.ts
+--------------------------------------------------
+import { Component, AfterViewInit, OnDestroy, ElementRef, inject, NgZone } from '@angular/core';
+import { RouterLink } from '@angular/router';
+
+@Component({
+  selector: 'app-hero-carousel',
+  imports: [RouterLink],
+  templateUrl: './hero-carousel.html',
+  styleUrl: './hero-carousel.css',
+})
+export class HeroCarousel implements AfterViewInit, OnDestroy {
+  private el = inject(ElementRef);
+  private zone = inject(NgZone);
+
+  private carousel!: HTMLElement;
+  private isDragging = false;
+  private startX = 0;
+  private scrollLeft = 0;
+  private autoScrollInterval: ReturnType<typeof setInterval> | null = null;
+  private currentSlide = 0;
+  private totalSlides = 0;
+
+  // Bound handlers for cleanup
+  private onMouseDown = (e: MouseEvent) => this.handleMouseDown(e);
+  private onMouseMove = (e: MouseEvent) => this.handleMouseMove(e);
+  private onMouseUp = () => this.handleMouseUp();
+  private onMouseLeave = () => this.handleMouseUp();
+
+  ngAfterViewInit() {
+    this.carousel = this.el.nativeElement.querySelector('.carousel');
+    if (!this.carousel) return;
+
+    const cards = this.carousel.querySelectorAll('.card');
+    this.totalSlides = cards.length;
+
+    // Mouse drag events (run outside Angular for performance)
+    this.zone.runOutsideAngular(() => {
+      this.carousel.addEventListener('mousedown', this.onMouseDown);
+      this.carousel.addEventListener('mousemove', this.onMouseMove);
+      this.carousel.addEventListener('mouseup', this.onMouseUp);
+      this.carousel.addEventListener('mouseleave', this.onMouseLeave);
+    });
+
+    // Auto-scroll every 6 seconds
+    this.startAutoScroll();
+  }
+
+  ngOnDestroy() {
+    if (this.carousel) {
+      this.carousel.removeEventListener('mousedown', this.onMouseDown);
+      this.carousel.removeEventListener('mousemove', this.onMouseMove);
+      this.carousel.removeEventListener('mouseup', this.onMouseUp);
+      this.carousel.removeEventListener('mouseleave', this.onMouseLeave);
+    }
+    this.stopAutoScroll();
+  }
+
+  private handleMouseDown(e: MouseEvent) {
+    this.isDragging = true;
+    this.carousel.classList.add('dragging');
+    this.startX = e.pageX - this.carousel.offsetLeft;
+    this.scrollLeft = this.carousel.scrollLeft;
+    this.stopAutoScroll();
+  }
+
+  private handleMouseMove(e: MouseEvent) {
+    if (!this.isDragging) return;
+    e.preventDefault();
+    const x = e.pageX - this.carousel.offsetLeft;
+    const walk = (x - this.startX) * 1.5; // Multiplier for drag speed
+    this.carousel.scrollLeft = this.scrollLeft - walk;
+  }
+
+  private handleMouseUp() {
+    if (!this.isDragging) return;
+    this.isDragging = false;
+    this.carousel.classList.remove('dragging');
+
+    // Snap to the closest card after drag
+    const cardWidth = this.carousel.offsetWidth;
+    this.currentSlide = Math.round(this.carousel.scrollLeft / cardWidth);
+    this.carousel.scrollTo({ left: this.currentSlide * cardWidth, behavior: 'smooth' });
+
+    this.startAutoScroll();
+  }
+
+  scrollToSlide(index: number) {
+    this.currentSlide = index;
+    const cardWidth = this.carousel.offsetWidth;
+    this.carousel.scrollTo({ left: index * cardWidth, behavior: 'smooth' });
+    this.stopAutoScroll();
+    this.startAutoScroll();
+  }
+
+  scrollPrev() {
+    this.currentSlide = this.currentSlide > 0 ? this.currentSlide - 1 : this.totalSlides - 1;
+    this.scrollToSlide(this.currentSlide);
+  }
+
+  scrollNext() {
+    this.currentSlide = this.currentSlide < this.totalSlides - 1 ? this.currentSlide + 1 : 0;
+    this.scrollToSlide(this.currentSlide);
+  }
+
+  private startAutoScroll() {
+    this.stopAutoScroll();
+    this.autoScrollInterval = setInterval(() => {
+      this.scrollNext();
+    }, 6000);
+  }
+
+  private stopAutoScroll() {
+    if (this.autoScrollInterval) {
+      clearInterval(this.autoScrollInterval);
+      this.autoScrollInterval = null;
+    }
+  }
+}
+
+
+--------------------------------------------------
+ARCHIVO: src\app\pages\home\home.css
+--------------------------------------------------
+
+
+--------------------------------------------------
+ARCHIVO: src\app\pages\home\home.html
+--------------------------------------------------
+<main>
+    <app-hero-carousel />
+    <app-about-section />
+    <app-flower-types />
+    <app-special-arrangements />
+    <app-trust-section />
+    <app-cta-section />
+</main>
+
+--------------------------------------------------
+ARCHIVO: src\app\pages\home\home.ts
+--------------------------------------------------
+import { Component } from '@angular/core';
+import { HeroCarousel } from './hero-carousel/hero-carousel';
+import { AboutSection } from './about-section/about-section';
+import { FlowerTypes } from './flower-types/flower-types';
+import { SpecialArrangements } from './special-arrangements/special-arrangements';
+import { TrustSection } from './trust-section/trust-section';
+import { CtaSection } from './cta-section/cta-section';
+
+@Component({
+  selector: 'app-home',
+  imports: [HeroCarousel, AboutSection, FlowerTypes, SpecialArrangements, TrustSection, CtaSection],
+  templateUrl: './home.html',
+  styleUrl: './home.css',
+})
+export class Home {}
+
+
+--------------------------------------------------
+ARCHIVO: src\app\pages\home\special-arrangements\special-arrangements.css
+--------------------------------------------------
+:host {
+    display: block;
+}
+
+.arreglos-especiales {
+    background: linear-gradient(135deg, #f8fffe 0%, #f1f8f1 100%);
+}
+
+.special-card {
+    background: var(--flores-white);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(19, 89, 42, 0.1);
+    border: 1px solid rgba(252, 211, 77, 0.2);
+}
+
+.special-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(19, 89, 42, 0.2);
+}
+
+.special-image {
+    position: relative;
+    overflow: hidden;
+    height: 250px;
+}
+
+.special-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.special-card:hover .special-image img {
+    transform: scale(1.05);
+}
+
+.special-overlay {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
+.badge-especial {
+    background: linear-gradient(45deg, #ff6b9d, #ff8cc8);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+}
+
+.badge-delicado {
+    background: linear-gradient(45deg, #a8e6cf, #88d8a3);
+    color: var(--flores-green-dark);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    box-shadow: 0 4px 15px rgba(168, 230, 207, 0.3);
+}
+
+.badge-variedad {
+    background: linear-gradient(45deg, #ffd93d, #ffb74d);
+    color: var(--flores-green-dark);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    box-shadow: 0 4px 15px rgba(255, 217, 61, 0.3);
+}
+
+--------------------------------------------------
+ARCHIVO: src\app\pages\home\special-arrangements\special-arrangements.html
+--------------------------------------------------
+<section class="arreglos-especiales py-5">
+    <div class="container">
+        <div class="row text-center mb-5" data-aos="fade-up">
+            <div class="col-12">
+                <h2 class="title-flores mb-3">Arreglos Especiales</h2>
+                <p class="lead text-muted">Momentos únicos merecen flores únicas</p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Ramo de Boda -->
+            <div class="col-lg-4 col-md-6" data-aos="fade-right" data-aos-delay="200">
+                <div class="special-card h-100">
+                    <div class="special-image">
+                        <img src="assets/img/ramo_boda_cencillo.jpg" alt="Ramo de Boda Sencillo" class="img-fluid"
+                            onerror="this.src='https://placehold.co/400x300/ff6b9d/ffffff?text=💐+Novias'">
+                        <div class="special-overlay">
+                            <span class="badge-especial">Para Novias</span>
+                        </div>
+                    </div>
+                    <div class="special-content p-4 text-center">
+                        <h5 class="fw-bold text-flores-green">Ramos de Novia</h5>
+                        <p class="text-muted mb-3">Elegancia y sencillez para el día más especial. Diseños clásicos y
+                            atemporales.</p>
+                        <a href="https://wa.me/573114582898?text=Hola! Me interesa un ramo de novia" target="_blank"
+                            class="btn btn-outline-primary btn-sm">
+                            <i class="fab fa-whatsapp me-1"></i>Consultar
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ramo Delicado -->
+            <div class="col-lg-4 col-md-6" data-aos="flip-up" data-aos-delay="350">
+                <div class="special-card h-100">
+                    <div class="special-image">
+                        <img src="assets/img/ramo_boda_cencillo_02.jpg" alt="Ramo Delicado" class="img-fluid"
+                            onerror="this.src='https://placehold.co/400x300/a8e6cf/0d3f1c?text=🌿+Delicado'">
+                        <div class="special-overlay">
+                            <span class="badge-delicado">Delicado</span>
+                        </div>
+                    </div>
+                    <div class="special-content p-4 text-center">
+                        <h5 class="fw-bold text-flores-green">Arreglos Delicados</h5>
+                        <p class="text-muted mb-3">Perfectos para ocasiones íntimas. Toques sutiles que expresan
+                            sentimientos profundos.</p>
+                        <a href="https://wa.me/573114582898?text=Hola! Quiero un arreglo delicado" target="_blank"
+                            class="btn btn-outline-primary btn-sm">
+                            <i class="fab fa-whatsapp me-1"></i>Consultar
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ramos Personalizados -->
+            <div class="col-lg-4 col-md-6" data-aos="fade-left" data-aos-delay="500">
+                <div class="special-card h-100">
+                    <div class="special-image">
+                        <img src="assets/img/ramos_03.jpg" alt="Variedad de Ramos" class="img-fluid"
+                            onerror="this.src='https://placehold.co/400x300/ffd93d/0d3f1c?text=🎁+Personalizado'">
+                        <div class="special-overlay">
+                            <span class="badge-variedad">Variedad</span>
+                        </div>
+                    </div>
+                    <div class="special-content p-4 text-center">
+                        <h5 class="fw-bold text-flores-green">Ramos Personalizados</h5>
+                        <p class="text-muted mb-3">Combinaciones únicas según tu gusto. Cada ramo cuenta una historia
+                            diferente.</p>
+                        <a href="https://wa.me/573114582898?text=Hola! Quiero un ramo personalizado" target="_blank"
+                            class="btn btn-outline-primary btn-sm">
+                            <i class="fab fa-whatsapp me-1"></i>Consultar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+--------------------------------------------------
+ARCHIVO: src\app\pages\home\special-arrangements\special-arrangements.ts
+--------------------------------------------------
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-special-arrangements',
+  templateUrl: './special-arrangements.html',
+  styleUrl: './special-arrangements.css',
+})
+export class SpecialArrangements {}
+
+
+--------------------------------------------------
+ARCHIVO: src\app\pages\home\trust-section\trust-section.css
+--------------------------------------------------
+:host {
+    display: block;
+}
+
+.confianza-section {
+    background: linear-gradient(135deg, #f8fffe 0%, #f1f8f1 100%);
+}
+
+.confianza-item {
+    padding: 2rem 1rem;
+    transition: transform 0.3s ease;
+}
+
+.confianza-item:hover {
+    transform: translateY(-5px);
+}
+
+.confianza-icon i {
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 4px 8px rgba(19, 89, 42, 0.2));
+}
+
+.confianza-item:hover .confianza-icon i {
+    transform: scale(1.1);
+    filter: drop-shadow(0 6px 12px rgba(19, 89, 42, 0.3));
+}
+
+--------------------------------------------------
+ARCHIVO: src\app\pages\home\trust-section\trust-section.html
+--------------------------------------------------
+<section class="confianza-section py-5 bg-light">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="confianza-item">
+                    <div class="confianza-icon mb-3">
+                        <i class="fas fa-leaf fa-3x text-flores-green"></i>
+                    </div>
+                    <h5 class="fw-bold text-flores-green">Flores Frescas</h5>
+                    <p class="text-muted mb-0">Seleccionadas diariamente con los más altos estándares de calidad</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="confianza-item">
+                    <div class="confianza-icon mb-3">
+                        <i class="fas fa-heart fa-3x text-flores-yellow"></i>
+                    </div>
+                    <h5 class="fw-bold text-flores-green">Amor en Cada Detalle</h5>
+                    <p class="text-muted mb-0">Emprendimiento familiar con pasión por crear momentos especiales</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="confianza-item">
+                    <div class="confianza-icon mb-3">
+                        <i class="fas fa-clock fa-3x text-flores-green"></i>
+                    </div>
+                    <h5 class="fw-bold text-flores-green">Atención Rápida</h5>
+                    <p class="text-muted mb-0">Respuesta inmediata por WhatsApp de Lun-Sáb 9am-7pm</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="400">
+                <div class="confianza-item">
+                    <div class="confianza-icon mb-3">
+                        <i class="fas fa-gift fa-3x text-flores-yellow"></i>
+                    </div>
+                    <h5 class="fw-bold text-flores-green">Listas para Regalar</h5>
+                    <p class="text-muted mb-0">Incluye moños decorativos y empaque especial sin costo adicional</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+--------------------------------------------------
+ARCHIVO: src\app\pages\home\trust-section\trust-section.ts
+--------------------------------------------------
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-trust-section',
+  templateUrl: './trust-section.html',
+  styleUrl: './trust-section.css',
+})
+export class TrustSection {}
+
+
+--------------------------------------------------
+ARCHIVO: src\app\shared\footer\footer.css
+--------------------------------------------------
+:host {
+    display: block;
+}
+
+.footer-flores {
+    background: linear-gradient(135deg, var(--flores-green) 0%, var(--flores-green-dark) 50%, #2E4F2E 100%);
+    border-top: 4px solid var(--flores-yellow);
+    color: var(--flores-white);
+    position: relative;
+    overflow: hidden;
+}
+
+.footer-flores::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(circle at 20% 50%, rgba(252, 211, 77, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
+    z-index: 0;
+}
+
+.footer-flores>.container {
+    position: relative;
+    z-index: 1;
+}
+
+/* Logo */
+.footer-logo {
+    height: 80px;
+    width: auto;
+    max-width: 320px;
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
+}
+
+.footer-logo:hover {
+    transform: scale(1.02);
+    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.5));
+}
+
+/* Section titles */
+.footer-section-title {
+    color: var(--flores-yellow);
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid var(--flores-yellow);
+    display: inline-block;
+    padding-bottom: 5px;
+}
+
+.footer-description {
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.7;
+    font-size: 0.95rem;
+}
+
+/* Links */
+.footer-flores a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.footer-flores a:hover {
+    color: var(--flores-yellow);
+}
+
+/* Social links */
+.social-links {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(252, 211, 77, 0.3);
+    color: var(--flores-white);
+    font-size: 1.3rem;
+    transition: all 0.3s ease;
+}
+
+.social-link:hover {
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    border-color: var(--flores-yellow);
+}
+
+.social-link.facebook:hover {
+    background: #4267B2;
+    color: white;
+}
+
+.social-link.instagram:hover {
+    background: linear-gradient(45deg, #f09433, #dc2743, #bc1888);
+    color: white;
+}
+
+.social-link.whatsapp:hover {
+    background: #25D366;
+    color: white;
+}
+
+/* Contact info */
+.contact-info p {
+    color: rgba(255, 255, 255, 0.8);
+    transition: all 0.3s ease;
+    padding: 8px 0;
+    border-radius: 5px;
+}
+
+.contact-info p:hover {
+    background: rgba(252, 211, 77, 0.1);
+    padding-left: 10px;
+}
+
+.contact-info i {
+    color: var(--flores-yellow);
+    width: 20px;
+    text-align: center;
+}
+
+/* List */
+.footer-flores ul li {
+    color: rgba(255, 255, 255, 0.8);
+    transition: all 0.3s ease;
+    padding: 5px 0;
+}
+
+.footer-flores ul li:hover {
+    color: var(--flores-yellow);
+    padding-left: 8px;
+}
+
+/* Divider */
+.footer-divider {
+    border: none;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--flores-yellow), transparent);
+    opacity: 0.7;
+}
+
+.footer-copyright,
+.footer-credits {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+    .footer-logo-container {
+        text-align: center;
+    }
+
+    .footer-logo {
+        height: 60px;
+        max-width: 250px;
+    }
+}
+
+--------------------------------------------------
+ARCHIVO: src\app\shared\footer\footer.html
+--------------------------------------------------
+<footer class="footer-flores py-5 mt-5">
+    <div class="container">
+        <div class="row g-5">
+            <!-- Información de la empresa -->
+            <div class="col-lg-5" data-aos="fade-up">
+                <div class="footer-brand">
+                    <div class="footer-logo-container mb-4">
+                        <a routerLink="/" class="footer-logo-link">
+                            <img src="assets/img/logo_flores.png" alt="FLORES - Que inspiran amor propio"
+                                class="footer-logo" onerror="this.style.display='none'">
+                        </a>
+                    </div>
+                    <p class="footer-description">
+                        Somos un emprendimiento familiar en Bogotá, ubicado en Carnova Premium.
+                        Seleccionamos las flores más frescas cada día para crear momentos especiales
+                        que inspiren tu amor propio.
+                    </p>
+                </div>
+
+                <div class="footer-social mt-4">
+                    <h6 class="footer-section-title mb-3">Síguenos</h6>
+                    <div class="social-links">
+                        <a href="#" class="social-link facebook" title="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="social-link instagram" title="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://wa.me/573114582898" class="social-link whatsapp" title="WhatsApp"
+                            target="_blank">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nuestras flores -->
+            <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                <h6 class="footer-section-title mb-4">Nuestras Flores</h6>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><i class="fas fa-spa text-warning me-2"></i>Astromelias (Favoritas)</li>
+                    <li class="mb-2"><i class="fas fa-spa text-info me-2"></i>Margaritas Elegantes</li>
+                    <li class="mb-2"><i class="fas fa-sun text-warning me-2"></i>Girasoles Radiantes</li>
+                    <li class="mb-2"><i class="fas fa-heart text-danger me-2"></i>Rosas Clásicas</li>
+                    <li class="mb-2"><i class="fas fa-gift text-success me-2"></i>Ramos Mixtos</li>
+                </ul>
+            </div>
+
+            <!-- Información de contacto -->
+            <div class="col-lg-3" data-aos="fade-up" data-aos-delay="200">
+                <h6 class="footer-section-title mb-4">Contacto</h6>
+                <div class="contact-info">
+                    <p class="mb-2">
+                        <i class="fas fa-map-marker-alt me-2"></i>
+                        <span>Transversal 73 #11C-20<br>Bogotá, Colombia</span>
+                    </p>
+                    <p class="mb-2">
+                        <i class="fas fa-phone me-2"></i>
+                        <span>311 458 2898</span>
+                    </p>
+                    <p class="mb-2">
+                        <i class="fas fa-store me-2"></i>
+                        <span>Local: Carnova Premium</span>
+                    </p>
+                    <p class="mb-2">
+                        <i class="fas fa-clock me-2"></i>
+                        <span>Lun - Sáb: 9:00am - 7:00pm</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <hr class="footer-divider my-5">
+
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <p class="footer-copyright mb-0">
+                    &copy; 2025 FLORES - Que inspiran amor propio. Todos los derechos reservados.
+                </p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <p class="footer-credits mb-0">
+                    Desarrollado con 💚 por el equipo de Flores By Dolly
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+--------------------------------------------------
+ARCHIVO: src\app\shared\footer\footer.ts
+--------------------------------------------------
+import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
+
+@Component({
+  selector: 'app-footer',
+  imports: [RouterLink],
+  templateUrl: './footer.html',
+  styleUrl: './footer.css',
+})
+export class Footer {}
+
+
+--------------------------------------------------
+ARCHIVO: src\app\shared\header\header.css
+--------------------------------------------------
+/* ===== NAVEGACIÓN ===== */
+:host {
+    display: block;
+}
+
+.navbar {
+    backdrop-filter: blur(10px);
+    background: linear-gradient(135deg, var(--flores-green) 0%, var(--flores-green-dark) 100%) !important;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 20px rgba(19, 89, 42, 0.3);
+    border-bottom: 2px solid var(--flores-yellow);
+}
+
+.navbar-scrolled {
+    background: rgba(19, 89, 42, 0.98) !important;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2) !important;
+}
+
+.logo-navbar {
+    height: 50px;
+    width: auto;
+    max-width: 250px;
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.brand-text {
+    display: none;
+}
+
+.logo-navbar[style*="display: none"]~.brand-text {
+    display: inline;
+}
+
+.navbar-brand:hover .logo-navbar {
+    transform: scale(1.05);
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.navbar-brand {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--flores-white) !important;
+    transition: all 0.3s ease;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-brand:hover {
+    transform: scale(1.05);
+    color: var(--flores-yellow) !important;
+}
+
+.navbar-nav .nav-link {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    position: relative;
+    margin: 0 0.5rem;
+    color: var(--flores-white) !important;
+}
+
+.navbar-nav .nav-link:hover {
+    color: var(--flores-yellow) !important;
+    transform: translateY(-2px);
+}
+
+.navbar-nav .nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 50%;
+    background-color: var(--flores-yellow);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.navbar-nav .nav-link:hover::after {
+    width: 100%;
+}
+
+.navbar-nav .nav-link.active {
+    color: var(--flores-yellow) !important;
+    font-weight: 600;
+}
+
+.navbar-nav .nav-link.active::after {
+    width: 100%;
+    background-color: var(--flores-yellow);
+    box-shadow: 0 0 8px var(--flores-yellow);
+}
+
+/* Social Links */
+.social-links a {
+    transition: all 0.3s ease;
+    display: inline-block;
+    padding: 0.5rem;
+    border-radius: 50%;
+    color: var(--flores-white) !important;
+}
+
+.social-links a:hover {
+    background-color: rgba(252, 211, 77, 0.2);
+    transform: translateY(-2px) scale(1.1);
+    color: var(--flores-yellow) !important;
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+    .navbar-nav {
+        text-align: center;
+        margin-top: 1rem;
+        background-color: rgba(19, 89, 42, 0.95);
+        border-radius: 10px;
+        padding: 1rem;
+    }
+
+    .navbar-nav .nav-link {
+        padding: 0.75rem 1rem;
+        margin: 0.25rem 0;
+        border-radius: 5px;
+    }
+
+    .navbar-nav .nav-link:hover {
+        background-color: rgba(252, 211, 77, 0.2);
+    }
+
+    .social-links {
+        justify-content: center;
+        margin-top: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .navbar-brand {
+        font-size: 1.5rem;
+    }
+
+    .logo-navbar {
+        height: 40px;
+        max-width: 200px;
+    }
+}
+
+--------------------------------------------------
+ARCHIVO: src\app\shared\header\header.html
+--------------------------------------------------
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" routerLink="/">
+            <img src="assets/img/logo_flores.png" alt="FLORES - Que inspiran amor propio" class="logo-navbar me-2"
+                onerror="this.style.display='none'">
+            <span class="brand-text">FLORES</span>
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/" routerLinkActive="active"
+                        [routerLinkActiveOptions]="{exact: true}">
+                        <i class="fas fa-home me-1"></i>Inicio
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/catalogo" routerLinkActive="active">
+                        <i class="fas fa-seedling me-1"></i>Catálogo
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/galeria" routerLinkActive="active">
+                        <i class="fas fa-images me-1"></i>Galería
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/contacto" routerLinkActive="active">
+                        <i class="fas fa-envelope me-1"></i>Contacto
+                    </a>
+                </li>
+            </ul>
+
+            <div class="d-flex align-items-center">
+                <div class="social-links me-3">
+                    <a href="#" class="text-light me-2" title="Facebook">
+                        <i class="fab fa-facebook-f fs-5"></i>
+                    </a>
+                    <a href="#" class="text-light" title="Instagram">
+                        <i class="fab fa-instagram fs-5"></i>
+                    </a>
+                </div>
+                <a routerLink="/contacto" class="btn btn-outline-light btn-sm d-none d-lg-block">
+                    <i class="fas fa-phone me-1"></i>Contáctanos
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+--------------------------------------------------
+ARCHIVO: src\app\shared\header\header.ts
+--------------------------------------------------
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import { DOCUMENT } from '@angular/common';
+
+@Component({
+  selector: 'app-header',
+  imports: [RouterLink, RouterLinkActive],
+  templateUrl: './header.html',
+  styleUrl: './header.css',
+})
+export class Header implements OnInit, OnDestroy {
+  private document = inject(DOCUMENT);
+  private scrollListener: (() => void) | null = null;
+
+  ngOnInit() {
+    this.scrollListener = () => {
+      const navbar = this.document.querySelector('.navbar') as HTMLElement;
+      if (!navbar) return;
+      if (window.scrollY > 50) {
+        navbar.classList.add('navbar-scrolled');
+      } else {
+        navbar.classList.remove('navbar-scrolled');
+      }
+    };
+    window.addEventListener('scroll', this.scrollListener);
+  }
+
+  ngOnDestroy() {
+    if (this.scrollListener) {
+      window.removeEventListener('scroll', this.scrollListener);
+    }
+  }
+}
+
+
+--------------------------------------------------
+ARCHIVO: src\app\shared\whatsapp-float\whatsapp-float.css
+--------------------------------------------------
+:host {
+    display: block;
+}
+
+.whatsapp-float {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #25D366;
+    color: white;
+    font-size: 28px;
+    border-radius: 50%;
+    z-index: 999;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    opacity: 0;
+    transform: translateY(100px);
+}
+
+.whatsapp-float.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.whatsapp-float:hover {
+    background-color: #128C7E;
+    transform: translateY(-5px) scale(1.1);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+    color: white;
+}
+
+.whatsapp-float.pulse {
+    animation: whatsapp-pulse 1s ease-in-out;
+}
+
+@keyframes whatsapp-pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    50% {
+        transform: scale(1.2);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
+    }
+
+    100% {
+        transform: scale(1);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+}
+
+@media (max-width: 768px) {
+    .whatsapp-float {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+        bottom: 15px;
+        right: 15px;
+    }
+}
+
+--------------------------------------------------
+ARCHIVO: src\app\shared\whatsapp-float\whatsapp-float.html
+--------------------------------------------------
+<a href="https://wa.me/573114582898?text=Hola! Quiero información sobre las flores disponibles" class="whatsapp-float"
+    [class.show]="isVisible" [class.pulse]="isPulsing" target="_blank" aria-label="Contactar por WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+</a>
+
+--------------------------------------------------
+ARCHIVO: src\app\shared\whatsapp-float\whatsapp-float.ts
+--------------------------------------------------
+import { Component, OnInit, OnDestroy } from '@angular/core';
+
+@Component({
+  selector: 'app-whatsapp-float',
+  templateUrl: './whatsapp-float.html',
+  styleUrl: './whatsapp-float.css',
+})
+export class WhatsappFloat implements OnInit, OnDestroy {
+  isVisible = false;
+  isPulsing = false;
+  private pulseInterval: ReturnType<typeof setInterval> | null = null;
+
+  ngOnInit() {
+    setTimeout(() => {
+      this.isVisible = true;
+    }, 3000);
+    this.pulseInterval = setInterval(() => {
+      this.isPulsing = true;
+      setTimeout(() => {
+        this.isPulsing = false;
+      }, 1000);
+    }, 5000);
+  }
+
+  ngOnDestroy() {
+    if (this.pulseInterval) clearInterval(this.pulseInterval);
+  }
+}
+
+
+--------------------------------------------------
+ARCHIVO: src\index.html
+--------------------------------------------------
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!-- SEO Meta Tags -->
+  <meta name="description"
+    content="FLORES - Que inspiran amor propio. Emprendimiento familiar en Bogotá especializado en flores frescas: Astromelias, Margaritas, Girasoles y Rosas.">
+  <meta name="keywords"
+    content="flores bogotá, astromelias, margaritas, girasoles, rosas, flores frescas, carnova premium, flores delivery">
+  <meta name="author" content="FLORES - Que inspiran amor propio">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="FLORES - Que inspiran amor propio">
+  <meta property="og:description"
+    content="Emprendimiento familiar en Bogotá especializado en flores frescas. Astromelias, Margaritas, Girasoles y Rosas de la mejor calidad.">
+  <meta property="og:type" content="website">
+
+  <!-- Mobile -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="FLORES">
+  <meta name="theme-color" content="#13592a">
+
+  <title>FLORES - Que inspiran amor propio | Flores Frescas en Bogotá</title>
+  <base href="/">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+
+  <link rel="icon" type="image/png" href="assets/img/icono_flores.png">
+</head>
+
+<body>
+  <app-root></app-root>
+</body>
+
+</html>
+
+--------------------------------------------------
+ARCHIVO: src\main.ts
+--------------------------------------------------
+import { bootstrapApplication } from '@angular/platform-browser';
+import { appConfig } from './app/app.config';
+import { App } from './app/app';
+
+bootstrapApplication(App, appConfig)
+  .catch((err) => console.error(err));
+
+
+--------------------------------------------------
+ARCHIVO: src\styles.css
+--------------------------------------------------
+/* ===== VARIABLES DE COLORES FLORES ===== */
+:root {
+    --flores-green: #13592a;
+    --flores-yellow: #FCD34D;
+    --flores-white: #FFFFFF;
+    --flores-green-light: #1e7a3a;
+    --flores-green-dark: #0d3f1c;
+    --flores-yellow-light: #FDE68A;
+    --flores-yellow-dark: #F59E0B;
+}
+
+/* ===== ESTILOS GLOBALES ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    color: #333;
+    overflow-x: hidden;
+}
+
+/* ===== TIPOGRAFÍA ===== */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--flores-green-dark);
+}
+
+.lead {
+    font-weight: 400;
+    color: #666;
+}
+
+/* ===== CLASES UTILITARIAS ===== */
+.title-flores {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    color: var(--flores-green);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.py-flores {
+    padding-top: 5rem !important;
+    padding-bottom: 5rem !important;
+}
+
+.text-flores-green {
+    color: var(--flores-green) !important;
+}
+
+.text-flores-yellow {
+    color: var(--flores-yellow-dark) !important;
+}
+
+.bg-flores-green {
+    background-color: var(--flores-green) !important;
+}
+
+.bg-flores-yellow {
+    background-color: var(--flores-yellow) !important;
+}
+
+/* ===== BOTONES PERSONALIZADOS ===== */
+.btn {
+    font-family: 'Poppins', sans-serif;
+    border-radius: 50px;
+    font-weight: 600;
+    padding: 15px 35px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.9rem;
+    border: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, var(--flores-green), var(--flores-green-light));
+    color: var(--flores-white);
+    box-shadow: 0 8px 25px rgba(92, 138, 69, 0.3);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(45deg, var(--flores-green-light), var(--flores-green));
+    color: var(--flores-white);
+    box-shadow: 0 12px 35px rgba(92, 138, 69, 0.5);
+}
+
+.btn-success {
+    background: linear-gradient(45deg, var(--flores-green), var(--flores-green-dark));
+    color: var(--flores-white);
+    box-shadow: 0 8px 25px rgba(92, 138, 69, 0.3);
+}
+
+.btn-success:hover {
+    background: linear-gradient(45deg, var(--flores-green-dark), var(--flores-green));
+    color: var(--flores-white);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 15px 40px rgba(92, 138, 69, 0.5);
+}
+
+.btn-warning {
+    background: linear-gradient(45deg, var(--flores-yellow), var(--flores-yellow-dark));
+    color: var(--flores-green-dark);
+    box-shadow: 0 8px 25px rgba(252, 211, 77, 0.3);
+}
+
+.btn-warning:hover {
+    background: linear-gradient(45deg, var(--flores-yellow-dark), var(--flores-yellow));
+    color: var(--flores-green-dark);
+    box-shadow: 0 12px 35px rgba(252, 211, 77, 0.5);
+}
+
+.btn-outline-light {
+    border: 2px solid var(--flores-white);
+    color: var(--flores-white);
+    background: transparent;
+}
+
+.btn-outline-light:hover {
+    background-color: var(--flores-white);
+    color: var(--flores-green);
+    border-color: var(--flores-white);
+    box-shadow: 0 10px 25px rgba(255, 255, 255, 0.3);
+}
+
+.btn-outline-primary {
+    border: 2px solid var(--flores-green);
+    color: var(--flores-green);
+    background: transparent;
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--flores-green);
+    color: var(--flores-white);
+    border-color: var(--flores-green);
+}
+
+/* ===== SCROLL SUAVE ===== */
+html {
+    scroll-behavior: smooth;
+}
+
+/* ===== SCROLLBAR PERSONALIZADA ===== */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, var(--flores-green), var(--flores-yellow));
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(45deg, var(--flores-yellow), var(--flores-green));
+}
+
+/* ===== ANIMACIONES GLOBALES ===== */
+@keyframes logoFloat {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: translate(-50%, -50%) scale(1.3);
+        opacity: 0.7;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes textGlow {
+
+    0%,
+    100% {
+        text-shadow: 0 0 10px rgba(252, 211, 77, 0.5);
+    }
+
+    50% {
+        text-shadow: 0 0 20px rgba(252, 211, 77, 0.8), 0 0 30px rgba(252, 211, 77, 0.3);
+    }
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-15px);
+    }
+}
+
+/* ===== RESPONSIVE GLOBAL ===== */
+@media (max-width: 768px) {
+    .py-flores {
+        padding-top: 3rem !important;
+        padding-bottom: 3rem !important;
+    }
+
+    .title-flores {
+        font-size: 1.5rem;
+        letter-spacing: 1px;
+    }
+
+    .btn {
+        padding: 12px 25px;
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .title-flores {
+        font-size: 1.3rem;
+    }
+}
+
+--------------------------------------------------
+ARCHIVO: tsconfig.app.json
+--------------------------------------------------
+/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
+/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/app",
+    "types": []
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "src/**/*.spec.ts"
+  ]
+}
+
+
+--------------------------------------------------
+ARCHIVO: tsconfig.json
+--------------------------------------------------
+/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
+/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "ES2022",
+    "module": "preserve"
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
+  },
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    }
+  ]
+}
+
+
+--------------------------------------------------
+ARCHIVO: tsconfig.spec.json
+--------------------------------------------------
+/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
+/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/spec",
+    "types": [
+      "vitest/globals"
+    ]
+  },
+  "include": [
+    "src/**/*.d.ts",
+    "src/**/*.spec.ts"
+  ]
+}
+

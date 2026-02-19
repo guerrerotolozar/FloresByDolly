@@ -1,0 +1,127 @@
+<!-- Hero Section Galería -->
+<section class="galeria-hero py-5">
+    <div class="container">
+        <div class="row align-items-center text-center text-white py-5">
+            <div class="col-12" data-aos="fade-down">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="fas fa-images me-3"></i>Nuestra Galería
+                </h1>
+                <p class="lead mb-4">Descubre la belleza de nuestras flores y arreglos</p>
+                <p class="fs-5 subtitle-hero">
+                    <i class="fas fa-camera me-2"></i>
+                    12 imágenes que cuentan historias de amor y dedicación
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Filtros de Categoría -->
+<section class="filtros-galeria py-4 bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="d-flex justify-content-center flex-wrap gap-3" data-aos="fade-up">
+                    <button class="btn filter-btn" [class.btn-primary]="activeFilter==='all'"
+                        [class.btn-outline-primary]="activeFilter!=='all'" (click)="setFilter('all')">
+                        <i class="fas fa-th me-2"></i>Todas
+                    </button>
+                    <button class="btn filter-btn" [class.btn-primary]="activeFilter==='local'"
+                        [class.btn-outline-primary]="activeFilter!=='local'" (click)="setFilter('local')">
+                        <i class="fas fa-store me-2"></i>Nuestro Local <span class="badge bg-secondary ms-1">3</span>
+                    </button>
+                    <button class="btn filter-btn" [class.btn-primary]="activeFilter==='productos'"
+                        [class.btn-outline-primary]="activeFilter!=='productos'" (click)="setFilter('productos')">
+                        <i class="fas fa-seedling me-2"></i>Productos <span class="badge bg-secondary ms-1">5</span>
+                    </button>
+                    <button class="btn filter-btn" [class.btn-primary]="activeFilter==='arreglos'"
+                        [class.btn-outline-primary]="activeFilter!=='arreglos'" (click)="setFilter('arreglos')">
+                        <i class="fas fa-gift me-2"></i>Arreglos Especiales <span
+                            class="badge bg-secondary ms-1">2</span>
+                    </button>
+                    <button class="btn filter-btn" [class.btn-primary]="activeFilter==='bodas'"
+                        [class.btn-outline-primary]="activeFilter!=='bodas'" (click)="setFilter('bodas')">
+                        <i class="fas fa-heart me-2"></i>Bodas <span class="badge bg-secondary ms-1">2</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Grid de Galería -->
+<section class="galeria-grid py-5">
+    <div class="container">
+        <div class="row g-4">
+            @for (item of filteredItems; track item.img) {
+            <div class="col-lg-4 col-md-6 gallery-item" data-aos="zoom-in">
+                <div class="gallery-card">
+                    <div class="gallery-image">
+                        <img [src]="item.img" [alt]="item.title" class="img-fluid">
+                        <div class="gallery-overlay">
+                            <div class="gallery-content">
+                                <h5 class="text-white mb-2">{{ item.title }}</h5>
+                                <p class="text-white-75 mb-3">{{ item.description }}</p>
+                                <button class="btn btn-warning btn-sm" (click)="openLightbox(item)">
+                                    <i class="fas fa-expand me-1"></i>Ver
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gallery-info p-3">
+                        <span class="badge mb-2" [ngClass]="item.badgeClass">{{ item.badgeLabel }}</span>
+                        <h6 class="fw-bold mb-1">{{ item.title }}</h6>
+                        <p class="text-muted mb-0 small">{{ item.description }}</p>
+                        @if (item.tags) {
+                        <div class="mt-2">
+                            @for (tag of item.tags; track tag) {
+                            <span class="badge bg-light text-dark me-1">{{ tag }}</span>
+                            }
+                        </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- Sección de llamada a la acción -->
+<section class="cta-galeria py-5">
+    <div class="container">
+        <div class="row align-items-center text-center">
+            <div class="col-12" data-aos="zoom-in">
+                <h3 class="display-6 fw-bold mb-4">¿Te gustó lo que viste?</h3>
+                <p class="lead mb-5">Cada imagen refleja nuestra pasión por las flores. ¡Haz tu pedido ahora!</p>
+                <div>
+                    <a href="https://wa.me/573114582898?text=Hola! Vi su galería y me encantó. Quiero hacer un pedido"
+                        target="_blank" class="btn btn-success btn-lg px-5 py-3 me-3">
+                        <i class="fab fa-whatsapp me-2"></i>Hacer Pedido
+                    </a>
+                    <a routerLink="/contacto" class="btn btn-outline-light btn-lg px-5 py-3">
+                        <i class="fas fa-map-marker-alt me-2"></i>Visitanos
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modal Lightbox -->
+@if (lightboxItem) {
+<div class="lightbox-backdrop" (click)="closeLightbox()">
+    <div class="lightbox-content" (click)="$event.stopPropagation()">
+        <button class="lightbox-close" (click)="closeLightbox()">&times;</button>
+        <img [src]="lightboxItem.img" [alt]="lightboxItem.title" class="img-fluid">
+        <div class="lightbox-footer">
+            <h5>{{ lightboxItem.title }}</h5>
+            <p>{{ lightboxItem.description }}</p>
+            <a href="https://wa.me/573114582898?text=Hola! Me interesa este tipo de arreglo que vi en su galería"
+                target="_blank" class="btn btn-success">
+                <i class="fab fa-whatsapp me-2"></i>Consultar por este arreglo
+            </a>
+        </div>
+    </div>
+</div>
+}
