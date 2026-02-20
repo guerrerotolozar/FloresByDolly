@@ -11,7 +11,13 @@ const app = express();
 
 // Middleware
 app.use(cors({
-    origin: ['http://localhost:4200', 'http://localhost:4000'],
+    origin: [
+        'http://localhost:4200',
+        'http://localhost:4000',
+        'https://www.floresbydolly.com',
+        'https://floresbydolly.com',
+        'https://floresbydolly.onrender.com',
+    ],
     credentials: true,
 }));
 app.use(express.json());
