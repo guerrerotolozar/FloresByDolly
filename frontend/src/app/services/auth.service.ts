@@ -11,7 +11,7 @@ interface LoginResponse {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly API = 'http://localhost:3000/api/auth';
+  private readonly API = 'https://floresbydolly.onrender.com/api/auth';
   private currentUser = signal<LoginResponse['user'] | null>(null);
 
   isLoggedIn = computed(() => !!this.currentUser() && !!this.getToken());

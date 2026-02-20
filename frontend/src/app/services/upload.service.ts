@@ -11,7 +11,7 @@ interface UploadResponse {
 
 @Injectable({ providedIn: 'root' })
 export class UploadService {
-  private readonly API = 'http://localhost:3000/api/upload';
+  private readonly API = 'https://floresbydolly.onrender.com/api/upload';
 
   constructor(
     private http: HttpClient,

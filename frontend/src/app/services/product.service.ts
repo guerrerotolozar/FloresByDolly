@@ -28,7 +28,7 @@ interface ProductResponse {
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
-  private readonly API = 'http://localhost:3000/api/products';
+  private readonly API = 'https://floresbydolly.onrender.com/api/products';
 
   constructor(
     private http: HttpClient,

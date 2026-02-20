@@ -21,7 +21,7 @@ interface CategoryResponse {
 
 @Injectable({ providedIn: 'root' })
 export class CategoryService {
-  private readonly API = 'http://localhost:3000/api/categories';
+  private readonly API = 'https://floresbydolly.onrender.com/api/categories';
 
   constructor(
     private http: HttpClient,

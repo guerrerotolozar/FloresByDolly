@@ -69,7 +69,7 @@ export class AdminProductForm implements OnInit {
           this.featuresText = (p.features || []).join('\n');
           this.tagsText = (p.tags || []).join(', ');
           if (p.image) {
-            this.imagePreview = `http://localhost:3000${p.image}`;
+            this.imagePreview = `https://floresbydolly.onrender.com${p.image}`;
           }
         },
         error: () => {
@@ -87,7 +87,7 @@ export class AdminProductForm implements OnInit {
     this.uploadSvc.upload(file).subscribe({
       next: (res) => {
         this.product.image = res.data.url;
-        this.imagePreview = `http://localhost:3000${res.data.url}`;
+        this.imagePreview = `https://floresbydolly.onrender.com${res.data.url}`;
       },
       error: () => {
         this.error = 'Error al subir la imagen';
