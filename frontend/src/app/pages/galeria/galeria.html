@@ -9,14 +9,14 @@
                 <p class="lead mb-4">Descubre la belleza de nuestras flores y arreglos</p>
                 <p class="fs-5 subtitle-hero">
                     <i class="fas fa-camera me-2"></i>
-                    12 imágenes que cuentan historias de amor y dedicación
+                    {{ items.length }} imágenes que cuentan historias de amor y dedicación
                 </p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Filtros de Categoría -->
+<!-- Filtros de Categoría (dinámicos) -->
 <section class="filtros-galeria py-4 bg-light">
     <div class="container">
         <div class="row justify-content-center">
@@ -26,23 +26,15 @@
                         [class.btn-outline-primary]="activeFilter!=='all'" (click)="setFilter('all')">
                         <i class="fas fa-th me-2"></i>Todas
                     </button>
-                    <button class="btn filter-btn" [class.btn-primary]="activeFilter==='local'"
-                        [class.btn-outline-primary]="activeFilter!=='local'" (click)="setFilter('local')">
-                        <i class="fas fa-store me-2"></i>Nuestro Local <span class="badge bg-secondary ms-1">3</span>
+                    @for (cat of categories; track cat.value) {
+                    @if (getCategoryCount(cat.value) > 0) {
+                    <button class="btn filter-btn" [class.btn-primary]="activeFilter===cat.value"
+                        [class.btn-outline-primary]="activeFilter!==cat.value" (click)="setFilter(cat.value)">
+                        <i [class]="cat.icon + ' me-2'"></i>{{ cat.label }}
+                        <span class="badge bg-secondary ms-1">{{ getCategoryCount(cat.value) }}</span>
                     </button>
-                    <button class="btn filter-btn" [class.btn-primary]="activeFilter==='productos'"
-                        [class.btn-outline-primary]="activeFilter!=='productos'" (click)="setFilter('productos')">
-                        <i class="fas fa-seedling me-2"></i>Productos <span class="badge bg-secondary ms-1">5</span>
-                    </button>
-                    <button class="btn filter-btn" [class.btn-primary]="activeFilter==='arreglos'"
-                        [class.btn-outline-primary]="activeFilter!=='arreglos'" (click)="setFilter('arreglos')">
-                        <i class="fas fa-gift me-2"></i>Arreglos Especiales <span
-                            class="badge bg-secondary ms-1">2</span>
-                    </button>
-                    <button class="btn filter-btn" [class.btn-primary]="activeFilter==='bodas'"
-                        [class.btn-outline-primary]="activeFilter!=='bodas'" (click)="setFilter('bodas')">
-                        <i class="fas fa-heart me-2"></i>Bodas <span class="badge bg-secondary ms-1">2</span>
-                    </button>
+                    }
+                    }
                 </div>
             </div>
         </div>
@@ -52,16 +44,37 @@
 <!-- Grid de Galería -->
 <section class="galeria-grid py-5">
     <div class="container">
+
+        <!-- Loading -->
+        @if (loading) {
+        <div class="text-center py-5">
+            <div class="spinner-border text-success" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+            <p class="mt-3 text-muted">Cargando galería...</p>
+        </div>
+        }
+
+        <!-- Sin imágenes -->
+        @if (!loading && filteredItems.length === 0) {
+        <div class="text-center py-5">
+            <i class="fas fa-images fa-3x text-muted mb-3"></i>
+            <p class="text-muted fs-5">No hay imágenes en esta categoría.</p>
+        </div>
+        }
+
         <div class="row g-4">
-            @for (item of filteredItems; track item.img) {
+            @for (item of filteredItems; track item._id) {
             <div class="col-lg-4 col-md-6 gallery-item" data-aos="zoom-in">
                 <div class="gallery-card">
                     <div class="gallery-image">
-                        <img [src]="item.img" [alt]="item.title" class="img-fluid">
+                        <img [src]="getImageUrl(item.image)" [alt]="item.title" class="img-fluid">
                         <div class="gallery-overlay">
                             <div class="gallery-content">
                                 <h5 class="text-white mb-2">{{ item.title }}</h5>
+                                @if (item.description) {
                                 <p class="text-white-75 mb-3">{{ item.description }}</p>
+                                }
                                 <button class="btn btn-warning btn-sm" (click)="openLightbox(item)">
                                     <i class="fas fa-expand me-1"></i>Ver
                                 </button>
@@ -69,10 +82,11 @@
                         </div>
                     </div>
                     <div class="gallery-info p-3">
-                        <span class="badge mb-2" [ngClass]="item.badgeClass">{{ item.badgeLabel }}</span>
                         <h6 class="fw-bold mb-1">{{ item.title }}</h6>
+                        @if (item.description) {
                         <p class="text-muted mb-0 small">{{ item.description }}</p>
-                        @if (item.tags) {
+                        }
+                        @if (item.tags && item.tags.length > 0) {
                         <div class="mt-2">
                             @for (tag of item.tags; track tag) {
                             <span class="badge bg-light text-dark me-1">{{ tag }}</span>
@@ -113,10 +127,12 @@
 <div class="lightbox-backdrop" (click)="closeLightbox()">
     <div class="lightbox-content" (click)="$event.stopPropagation()">
         <button class="lightbox-close" (click)="closeLightbox()">&times;</button>
-        <img [src]="lightboxItem.img" [alt]="lightboxItem.title" class="img-fluid">
+        <img [src]="getImageUrl(lightboxItem.image)" [alt]="lightboxItem.title" class="img-fluid">
         <div class="lightbox-footer">
             <h5>{{ lightboxItem.title }}</h5>
+            @if (lightboxItem.description) {
             <p>{{ lightboxItem.description }}</p>
+            }
             <a href="https://wa.me/573114582898?text=Hola! Me interesa este tipo de arreglo que vi en su galería"
                 target="_blank" class="btn btn-success">
                 <i class="fab fa-whatsapp me-2"></i>Consultar por este arreglo

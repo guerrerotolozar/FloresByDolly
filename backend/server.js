@@ -31,6 +31,7 @@ app.use('/api/auth', require('./routes/auth.routes'));
 app.use('/api/products', require('./routes/product.routes'));
 app.use('/api/categories', require('./routes/category.routes'));
 app.use('/api/upload', require('./routes/upload.routes'));
+app.use('/api/gallery', require('./routes/gallery.routes'));
 
 // Ruta de health check
 app.get('/api/health', (req, res) => {
