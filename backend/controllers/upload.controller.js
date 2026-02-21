@@ -1,7 +1,6 @@
-const path = require('path');
-const fs = require('fs');
+const cloudinary = require('../config/cloudinary');
 
-// POST /api/upload — Subir imagen (admin)
+// POST /api/upload — Subir imagen a Cloudinary (admin)
 exports.uploadImage = async (req, res) => {
     try {
         if (!req.file) {
@@ -11,13 +10,13 @@ exports.uploadImage = async (req, res) => {
             });
         }
 
-        const imageUrl = `/uploads/${req.file.filename}`;
-
+        // Con Cloudinary, req.file.path es la URL completa de la imagen
+        // Ejemplo: https://res.cloudinary.com/dcea1j9yk/image/upload/v123/floresbydolly/flores-123.jpg
         res.json({
             success: true,
             data: {
                 filename: req.file.filename,
-                url: imageUrl,
+                url: req.file.path, // URL completa de Cloudinary
                 size: req.file.size,
             },
         });
@@ -27,19 +26,14 @@ exports.uploadImage = async (req, res) => {
     }
 };
 
-// DELETE /api/upload/:filename — Eliminar imagen (admin)
+// DELETE /api/upload/:filename — Eliminar imagen de Cloudinary (admin)
 exports.deleteImage = async (req, res) => {
     try {
-        const filePath = path.join(__dirname, '..', 'uploads', req.params.filename);
+        const filename = req.params.filename;
+        // El public_id en Cloudinary es "floresbydolly/nombre-del-archivo" (sin extensión)
+        const publicId = `floresbydolly/${filename.replace(/\.[^/.]+$/, '')}`;
 
-        if (!fs.existsSync(filePath)) {
-            return res.status(404).json({
-                success: false,
-                message: 'Imagen no encontrada.',
-            });
-        }
-
-        fs.unlinkSync(filePath);
+        await cloudinary.uploader.destroy(publicId);
 
         res.json({ success: true, message: 'Imagen eliminada.' });
     } catch (error) {

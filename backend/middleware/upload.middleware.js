@@ -1,23 +1,15 @@
 const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const cloudinary = require('../config/cloudinary');
 
-// Crear carpeta uploads si no existe
-const uploadsDir = path.join(__dirname, '..', 'uploads');
-if (!fs.existsSync(uploadsDir)) {
-    fs.mkdirSync(uploadsDir, { recursive: true });
-}
-
-// Configurar almacenamiento
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, uploadsDir);
-    },
-    filename: (req, file, cb) => {
-        // nombre-unico-timestamp.ext
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-        const ext = path.extname(file.originalname).toLowerCase();
-        cb(null, `flores-${uniqueSuffix}${ext}`);
+// Almacenamiento en Cloudinary (en la nube, no en disco local)
+// Las imágenes persisten entre deploys y se sirven desde CDN
+const storage = new CloudinaryStorage({
+    cloudinary,
+    params: {
+        folder: 'floresbydolly', // Carpeta en Cloudinary
+        allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'gif'],
+        transformation: [{ width: 800, height: 800, crop: 'limit', quality: 'auto' }],
     },
 });
 
