@@ -38,7 +38,7 @@
     </div>
 </section>
 
-<!-- Filtros de Categoría -->
+<!-- Filtros de Categoría (dinámicos desde API) -->
 <section class="filtros-catalogo py-4 bg-light">
     <div class="container">
         <div class="row justify-content-center">
@@ -48,46 +48,58 @@
                         [class.btn-outline-primary]="activeFilter!=='all'" (click)="setFilter('all')">
                         <i class="fas fa-th me-2"></i>Todas las Flores
                     </button>
-                    <button class="btn filter-btn" [class.btn-primary]="activeFilter==='sencillas'"
-                        [class.btn-outline-primary]="activeFilter!=='sencillas'" (click)="setFilter('sencillas')">
-                        <i class="fas fa-leaf me-2"></i>Flores Sencillas
+                    @for (cat of categories; track cat._id) {
+                    <button class="btn filter-btn" [class.btn-primary]="activeFilter===cat.slug"
+                        [class.btn-outline-primary]="activeFilter!==cat.slug" (click)="setFilter(cat.slug)">
+                        <i [class]="cat.icon + ' me-2'"></i>{{ cat.name }}
                     </button>
-                    <button class="btn filter-btn" [class.btn-primary]="activeFilter==='especiales'"
-                        [class.btn-outline-primary]="activeFilter!=='especiales'" (click)="setFilter('especiales')">
-                        <i class="fas fa-star me-2"></i>Arreglos Especiales
-                    </button>
-                    <button class="btn filter-btn" [class.btn-primary]="activeFilter==='rosas'"
-                        [class.btn-outline-primary]="activeFilter!=='rosas'" (click)="setFilter('rosas')">
-                        <i class="fas fa-heart me-2"></i>Rosas
-                    </button>
-                    <button class="btn filter-btn" [class.btn-primary]="activeFilter==='temporada'"
-                        [class.btn-outline-primary]="activeFilter!=='temporada'" (click)="setFilter('temporada')">
-                        <i class="fas fa-calendar-alt me-2"></i>De Temporada
-                    </button>
+                    }
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Grid de Productos -->
+<!-- Grid de Productos (dinámico desde API) -->
 <section class="catalogo-productos py-5">
     <div class="container">
+
+        <!-- Loading -->
+        @if (loading) {
+        <div class="text-center py-5">
+            <div class="spinner-border text-success" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+            <p class="mt-3 text-muted">Cargando productos...</p>
+        </div>
+        }
+
+        <!-- Sin productos -->
+        @if (!loading && filteredItems.length === 0) {
+        <div class="text-center py-5">
+            <i class="fas fa-seedling fa-3x text-muted mb-3"></i>
+            <p class="text-muted fs-5">No hay productos disponibles en esta categoría.</p>
+        </div>
+        }
+
+        <!-- Productos -->
         <div class="row g-4">
-            @for (item of filteredItems; track item.name) {
+            @for (item of filteredItems; track item._id) {
             <div class="col-lg-4 col-md-6 producto-item" data-aos="zoom-in">
                 <div class="producto-card h-100">
                     <div class="producto-image">
-                        <img [src]="item.img" [alt]="item.name" class="img-fluid">
+                        <img [src]="getImageUrl(item)" [alt]="item.name" class="img-fluid">
+                        @if (item.badgeLabel) {
                         <div class="producto-badge">
                             <span class="badge" [ngClass]="item.badgeClass">{{ item.badgeLabel }}</span>
                         </div>
+                        }
                         <div class="producto-overlay">
                             <div class="producto-actions">
                                 <button class="btn btn-warning btn-sm mb-2" (click)="openLightbox(item)">
                                     <i class="fas fa-eye me-1"></i>Ver
                                 </button>
-                                <a [href]="item.consultUrl" target="_blank" class="btn btn-success btn-sm">
+                                <a [href]="getWhatsappUrl(item)" target="_blank" class="btn btn-success btn-sm">
                                     <i class="fab fa-whatsapp me-1"></i>Consultar
                                 </a>
                             </div>
@@ -100,6 +112,7 @@
                         </div>
                         <p class="text-muted mb-3">{{ item.description }}</p>
 
+                        @if (item.features && item.features.length > 0) {
                         <div class="caracteristicas mb-3">
                             <h6 class="fw-bold text-flores-green mb-2">Características:</h6>
                             <ul class="list-unstyled small">
@@ -108,16 +121,19 @@
                                 }
                             </ul>
                         </div>
+                        }
 
+                        @if (item.tags && item.tags.length > 0) {
                         <div class="tags mb-3">
                             @for (tag of item.tags; track tag) {
                             <span class="badge bg-light text-dark me-1">{{ tag }}</span>
                             }
                         </div>
+                        }
 
                         <div class="producto-actions-bottom">
-                            <a [href]="item.orderUrl" target="_blank" class="btn btn-primary w-100">
-                                <i class="fab fa-whatsapp me-2"></i>{{ item.orderLabel }}
+                            <a [href]="getOrderUrl(item)" target="_blank" class="btn btn-primary w-100">
+                                <i class="fab fa-whatsapp me-2"></i>Hacer Pedido
                             </a>
                         </div>
                     </div>
@@ -192,12 +208,11 @@
 <div class="lightbox-backdrop" (click)="closeLightbox()">
     <div class="lightbox-content" (click)="$event.stopPropagation()">
         <button class="lightbox-close" (click)="closeLightbox()">&times;</button>
-        <img [src]="lightboxItem.img" [alt]="lightboxItem.name" class="img-fluid">
+        <img [src]="getImageUrl(lightboxItem)" [alt]="lightboxItem.name" class="img-fluid">
         <div class="lightbox-footer">
             <h5>{{ lightboxItem.name }}</h5>
             <p>{{ lightboxItem.description }}</p>
-            <a href="https://wa.me/573114582898?text=Hola! Me interesa este producto que vi en su catálogo"
-                target="_blank" class="btn btn-success">
+            <a [href]="getWhatsappUrl(lightboxItem)" target="_blank" class="btn btn-success">
                 <i class="fab fa-whatsapp me-2"></i>Consultar este producto
             </a>
         </div>
