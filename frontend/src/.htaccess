@@ -1,0 +1,8 @@
+RewriteEngine On
+
+# Si el archivo o directorio existe realmente, sirve ese recurso
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Si no existe, redirige todo a index.html (Angular SPA routing)
+RewriteRule ^.*$ /index.html [L]
