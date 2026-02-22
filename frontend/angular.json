@@ -49,6 +49,11 @@
                 "input": "public"
               },
               {
+                "glob": "**/*",
+                "input": "src/assets",
+                "output": "assets"
+              },
+              {
                 "glob": ".htaccess",
                 "input": "src"
               }
