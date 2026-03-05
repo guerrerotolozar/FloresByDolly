@@ -10,6 +10,10 @@ export interface Category {
   icon: string;
   order: number;
   isActive: boolean;
+  showOnHome: boolean;
+  description: string;
+  image: string;
+  color: string;
 }
 
 interface CategoryResponse {

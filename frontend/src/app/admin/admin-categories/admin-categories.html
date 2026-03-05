@@ -15,14 +15,14 @@
         <form (ngSubmit)="save()">
             <div class="row">
                 <div class="col-md-3 mb-2">
-                    <label class="form-label">Nombre</label>
+                    <label class="form-label">Nombre *</label>
                     <input type="text" class="form-control" [(ngModel)]="form.name" name="name" (input)="autoSlug()"
-                        placeholder="Flores Sencillas" />
+                        placeholder="Diseños de Autor" />
                 </div>
                 <div class="col-md-3 mb-2">
                     <label class="form-label">Slug</label>
                     <input type="text" class="form-control" [(ngModel)]="form.slug" name="slug"
-                        placeholder="sencillas" />
+                        placeholder="disenos-de-autor" />
                 </div>
                 <div class="col-md-2 mb-2">
                     <label class="form-label">Icono</label>
@@ -33,13 +33,45 @@
                     <label class="form-label">Orden</label>
                     <input type="number" class="form-control" [(ngModel)]="form.order" name="order" />
                 </div>
-                <div class="col-md-2 mb-2 d-flex align-items-end gap-2">
-                    <button type="submit" class="btn btn-save btn-sm">
-                        <i class="fas fa-check me-1"></i> Guardar
-                    </button>
-                    <button type="button" class="btn btn-outline-secondary btn-sm" (click)="showForm = false">
-                        Cancelar
-                    </button>
+                <div class="col-md-2 mb-2">
+                    <label class="form-label">Color del card</label>
+                    <input type="color" class="form-control form-control-color" [(ngModel)]="form.color" name="color" />
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-6 mb-2">
+                    <label class="form-label">Descripción (para la card del Home)</label>
+                    <input type="text" class="form-control" [(ngModel)]="form.description" name="description"
+                        placeholder="Una breve descripción de esta categoría..." />
+                </div>
+                <div class="col-md-4 mb-2">
+                    <label class="form-label">Imagen del card</label>
+                    <input type="file" class="form-control" accept="image/*" (change)="onFileSelected($event)" />
+                    @if (uploading) {
+                    <small class="text-muted"><i class="fas fa-spinner fa-spin me-1"></i>Subiendo...</small>
+                    }
+                    @if (form.image) {
+                    <div class="mt-1">
+                        <img [src]="form.image" alt="Preview" style="height: 50px; border-radius: 4px;" />
+                    </div>
+                    }
+                </div>
+                <div class="col-md-2 mb-2 d-flex flex-column justify-content-end">
+                    <div class="form-check mb-2">
+                        <input type="checkbox" class="form-check-input" [(ngModel)]="form.showOnHome" name="showOnHome"
+                            id="showOnHome" />
+                        <label class="form-check-label" for="showOnHome">
+                            <i class="fas fa-home me-1"></i>Mostrar en Home
+                        </label>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-save btn-sm">
+                            <i class="fas fa-check me-1"></i> Guardar
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" (click)="showForm = false">
+                            Cancelar
+                        </button>
+                    </div>
                 </div>
             </div>
         </form>
@@ -61,6 +93,7 @@
                         <th>Icono</th>
                         <th>Nombre</th>
                         <th>Slug</th>
+                        <th>Home</th>
                         <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
@@ -72,6 +105,12 @@
                         <td><i [class]="cat.icon" class="category-icon"></i></td>
                         <td class="fw-bold">{{ cat.name }}</td>
                         <td class="text-muted">{{ cat.slug }}</td>
+                        <td>
+                            <button class="btn-toggle-status" [class.active]="cat.showOnHome" (click)="toggleHome(cat)"
+                                title="Mostrar en Home">
+                                <i [class]="cat.showOnHome ? 'fas fa-home' : 'far fa-square'"></i>
+                            </button>
+                        </td>
                         <td>
                             <button class="btn-toggle-status" [class.active]="cat.isActive" (click)="toggleActive(cat)">
                                 <i [class]="cat.isActive ? 'fas fa-toggle-on' : 'fas fa-toggle-off'"></i>

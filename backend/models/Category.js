@@ -26,6 +26,23 @@ const categorySchema = new mongoose.Schema(
             type: Boolean,
             default: true,
         },
+        showOnHome: {
+            type: Boolean,
+            default: false,
+        },
+        description: {
+            type: String,
+            trim: true,
+            default: '',
+        },
+        image: {
+            type: String,
+            default: '',
+        },
+        color: {
+            type: String,
+            default: '#13592a',
+        },
     },
     {
         timestamps: true,

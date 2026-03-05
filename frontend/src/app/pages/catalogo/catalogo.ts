@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, ActivatedRoute } from '@angular/router';
 import { ProductService, Product } from '../../services/product.service';
 import { CategoryService, Category } from '../../services/category.service';
 
@@ -24,9 +24,17 @@ export class Catalogo implements OnInit {
   constructor(
     private productSvc: ProductService,
     private categorySvc: CategoryService,
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
+    // Leer query param ?category=slug para auto-filtrar
+    this.route.queryParams.subscribe((params) => {
+      if (params['category']) {
+        this.activeFilter = params['category'];
+      }
+    });
+
     // Cargar productos activos desde la API
     this.productSvc.getAll().subscribe({
       next: (res) => {

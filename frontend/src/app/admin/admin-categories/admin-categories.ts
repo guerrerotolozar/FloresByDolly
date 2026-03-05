@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CategoryService, Category } from '../../services/category.service';
+import { UploadService } from '../../services/upload.service';
 
 @Component({
   selector: 'app-admin-categories',
@@ -15,10 +16,24 @@ export class AdminCategories implements OnInit {
   loading = true;
   showForm = false;
   editing: Category | null = null;
+  uploading = false;
 
-  form = { name: '', slug: '', icon: 'fas fa-leaf', order: 0, isActive: true };
+  form = {
+    name: '',
+    slug: '',
+    icon: 'fas fa-leaf',
+    order: 0,
+    isActive: true,
+    showOnHome: false,
+    description: '',
+    image: '',
+    color: '#13592a',
+  };
 
-  constructor(private categorySvc: CategoryService) {}
+  constructor(
+    private categorySvc: CategoryService,
+    private uploadSvc: UploadService,
+  ) {}
 
   ngOnInit(): void {
     this.loadCategories();
@@ -42,13 +57,27 @@ export class AdminCategories implements OnInit {
       icon: 'fas fa-leaf',
       order: this.categories.length + 1,
       isActive: true,
+      showOnHome: false,
+      description: '',
+      image: '',
+      color: '#13592a',
     };
     this.editing = null;
     this.showForm = true;
   }
 
   openEdit(cat: Category): void {
-    this.form = { ...cat };
+    this.form = {
+      name: cat.name,
+      slug: cat.slug,
+      icon: cat.icon,
+      order: cat.order,
+      isActive: cat.isActive,
+      showOnHome: cat.showOnHome || false,
+      description: cat.description || '',
+      image: cat.image || '',
+      color: cat.color || '#13592a',
+    };
     this.editing = cat;
     this.showForm = true;
   }
@@ -62,6 +91,19 @@ export class AdminCategories implements OnInit {
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)/g, '');
     }
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files?.length) return;
+    this.uploading = true;
+    this.uploadSvc.upload(input.files[0]).subscribe({
+      next: (res) => {
+        this.form.image = res.data.url;
+        this.uploading = false;
+      },
+      error: () => (this.uploading = false),
+    });
   }
 
   save(): void {
@@ -88,6 +130,12 @@ export class AdminCategories implements OnInit {
   toggleActive(cat: Category): void {
     this.categorySvc.update(cat._id, { isActive: !cat.isActive } as any).subscribe({
       next: () => (cat.isActive = !cat.isActive),
+    });
+  }
+
+  toggleHome(cat: Category): void {
+    this.categorySvc.update(cat._id, { showOnHome: !cat.showOnHome } as any).subscribe({
+      next: () => (cat.showOnHome = !cat.showOnHome),
     });
   }
 
