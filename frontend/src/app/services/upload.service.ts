@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
+import { environment } from '../../environments/environment';
 
 interface UploadResponse {
   success: boolean;
@@ -11,7 +12,7 @@ interface UploadResponse {
 
 @Injectable({ providedIn: 'root' })
 export class UploadService {
-  private readonly API = 'https://floresbydolly.onrender.com/api/upload';
+  private readonly API = `${environment.apiUrl}/upload`;
 
   constructor(
     private http: HttpClient,

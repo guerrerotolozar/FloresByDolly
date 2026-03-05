@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
+import { environment } from '../../environments/environment';
 
 export interface Category {
   _id: string;
@@ -25,7 +26,7 @@ interface CategoryResponse {
 
 @Injectable({ providedIn: 'root' })
 export class CategoryService {
-  private readonly API = 'https://floresbydolly.onrender.com/api/categories';
+  private readonly API = `${environment.apiUrl}/categories`;
 
   constructor(
     private http: HttpClient,

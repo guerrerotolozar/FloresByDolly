@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
+import { environment } from '../../environments/environment';
 
 export interface GalleryItem {
   _id: string;
@@ -23,7 +24,7 @@ interface GalleryResponse {
 
 @Injectable({ providedIn: 'root' })
 export class GalleryService {
-  private readonly API = 'https://floresbydolly.onrender.com/api/gallery';
+  private readonly API = `${environment.apiUrl}/gallery`;
 
   constructor(
     private http: HttpClient,

@@ -2,6 +2,7 @@ import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap, catchError, of, map } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 interface LoginResponse {
   success: boolean;
@@ -11,7 +12,7 @@ interface LoginResponse {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly API = 'https://floresbydolly.onrender.com/api/auth';
+  private readonly API = `${environment.apiUrl}/auth`;
   private currentUser = signal<LoginResponse['user'] | null>(null);
 
   isLoggedIn = computed(() => !!this.currentUser() && !!this.getToken());
