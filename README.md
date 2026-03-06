@@ -1,56 +1,58 @@
-<![CDATA[# 🌸 Flores By Dolly
+# Flores By Dolly
 
-**Plataforma web para un emprendimiento familiar de flores ubicado en Bogotá, Colombia.**
+**Plataforma web para un emprendimiento familiar de flores ubicado en Bogota, Colombia.**
 
-Flores By Dolly es una tienda en línea que permite a los clientes explorar un catálogo de arreglos florales, conocer la galería de trabajos realizados y contactar directamente por WhatsApp para realizar pedidos. Incluye un panel de administración completo para gestionar productos, categorías y la galería de imágenes.
-
----
-
-## 📸 Vista General
-
-| Página        | Descripción                                      |
-|---------------|--------------------------------------------------|
-| **Inicio**    | Landing page con categorías destacadas y productos |
-| **Catálogo**  | Listado completo de productos con filtros          |
-| **Galería**   | Galería fotográfica de arreglos realizados         |
-| **Contacto**  | Formulario de contacto e información del negocio   |
-| **Admin**     | Panel de administración protegido con JWT          |
+Flores By Dolly es una tienda en linea que permite a los clientes explorar un catalogo de arreglos florales, conocer la galeria de trabajos realizados y contactar directamente por WhatsApp para realizar pedidos. Incluye un panel de administracion completo para gestionar productos, categorias y la galeria de imagenes.
 
 ---
 
-## 🛠️ Tech Stack
+## Vista General
+
+| Pagina       | Descripcion                                        |
+| ------------ | -------------------------------------------------- |
+| **Inicio**   | Landing page con categorias destacadas y productos |
+| **Catalogo** | Listado completo de productos con filtros          |
+| **Galeria**  | Galeria fotografica de arreglos realizados         |
+| **Contacto** | Formulario de contacto e informacion del negocio   |
+| **Admin**    | Panel de administracion protegido con JWT          |
+
+---
+
+## Tech Stack
 
 ### Frontend
-| Tecnología        | Versión  | Uso                              |
-|-------------------|----------|----------------------------------|
-| Angular           | 21       | Framework SPA                    |
-| TypeScript        | 5.9      | Lenguaje principal               |
-| Bootstrap         | 5.3      | Sistema de grid y componentes UI |
-| Font Awesome      | 7.2      | Iconografía                      |
-| AOS               | 2.3      | Animaciones al hacer scroll      |
-| Zone.js           | 0.16     | Change detection                 |
-| RxJS              | 7.8      | Programación reactiva            |
+
+| Tecnologia   | Version | Uso                              |
+| ------------ | ------- | -------------------------------- |
+| Angular      | 21      | Framework SPA                    |
+| TypeScript   | 5.9     | Lenguaje principal               |
+| Bootstrap    | 5.3     | Sistema de grid y componentes UI |
+| Font Awesome | 7.2     | Iconografia                      |
+| AOS          | 2.3     | Animaciones al hacer scroll      |
+| Zone.js      | 0.16    | Change detection                 |
+| RxJS         | 7.8     | Programacion reactiva            |
 
 ### Backend
-| Tecnología            | Versión | Uso                           |
-|-----------------------|---------|-------------------------------|
-| Node.js + Express     | 5.x     | Servidor REST API             |
-| MongoDB + Mongoose    | 9.x     | Base de datos NoSQL           |
-| Cloudinary            | 1.41    | Almacenamiento de imágenes    |
-| JWT (jsonwebtoken)    | 9.x     | Autenticación                 |
-| bcryptjs              | 3.x     | Hashing de contraseñas        |
-| Multer                | 2.x     | Subida de archivos            |
-| express-validator     | 7.x     | Validación de datos           |
+
+| Tecnologia         | Version | Uso                        |
+| ------------------ | ------- | -------------------------- |
+| Node.js + Express  | 5.x     | Servidor REST API          |
+| MongoDB + Mongoose | 9.x     | Base de datos NoSQL        |
+| Cloudinary         | 1.41    | Almacenamiento de imagenes |
+| JWT (jsonwebtoken) | 9.x     | Autenticacion              |
+| bcryptjs           | 3.x     | Hashing de contrasenas     |
+| Multer             | 2.x     | Subida de archivos         |
+| express-validator  | 7.x     | Validacion de datos        |
 
 ---
 
-## 📁 Estructura del Proyecto
+## Estructura del Proyecto
 
 ```
 FloresByDolly/
 ├── backend/
-│   ├── config/          # Configuración de BD y Cloudinary
-│   ├── controllers/     # Lógica de negocio
+│   ├── config/          # Configuracion de BD y Cloudinary
+│   ├── controllers/     # Logica de negocio
 │   │   ├── auth.controller.js
 │   │   ├── category.controller.js
 │   │   ├── gallery.controller.js
@@ -70,12 +72,12 @@ FloresByDolly/
 └── frontend/
     └── src/
         ├── app/
-        │   ├── pages/        # Páginas principales
+        │   ├── pages/        # Paginas principales
         │   │   ├── home/
         │   │   ├── catalogo/
         │   │   ├── galeria/
         │   │   └── contacto/
-        │   ├── admin/        # Panel de administración
+        │   ├── admin/        # Panel de administracion
         │   │   ├── admin-dashboard/
         │   │   ├── admin-products/
         │   │   ├── admin-product-form/
@@ -85,14 +87,14 @@ FloresByDolly/
         │   │   └── admin-layout/
         │   ├── services/     # Servicios Angular (HTTP)
         │   ├── shared/       # Componentes reutilizables (header, footer)
-        │   └── guards/       # Guards de autenticación
-        ├── environments/     # Configuración por entorno
-        └── assets/           # Imágenes y recursos estáticos
+        │   └── guards/       # Guards de autenticacion
+        ├── environments/     # Configuracion por entorno
+        └── assets/           # Imagenes y recursos estaticos
 ```
 
 ---
 
-## 🚀 Instalación y Ejecución Local
+## Instalacion y Ejecucion Local
 
 ### Prerrequisitos
 
@@ -132,7 +134,7 @@ Iniciar el servidor:
 npm start
 ```
 
-> El backend estará disponible en `http://localhost:3000`
+El backend estara disponible en `http://localhost:3000`
 
 ### 3. Configurar el Frontend
 
@@ -142,7 +144,7 @@ npm install
 npm start
 ```
 
-> El frontend estará disponible en `http://localhost:4200`
+El frontend estara disponible en `http://localhost:4200`
 
 ### 4. (Opcional) Seed de datos iniciales
 
@@ -153,70 +155,69 @@ npm run seed
 
 ---
 
-## 🔌 API Endpoints
+## API Endpoints
 
-| Método | Ruta                   | Descripción                 | Autenticación |
-|--------|------------------------|-----------------------------|---------------|
-| POST   | `/api/auth/register`   | Registro de usuario         | No            |
-| POST   | `/api/auth/login`      | Inicio de sesión            | No            |
-| GET    | `/api/products`        | Listar productos            | No            |
-| POST   | `/api/products`        | Crear producto              | JWT (Admin)   |
-| PUT    | `/api/products/:id`    | Actualizar producto         | JWT (Admin)   |
-| DELETE | `/api/products/:id`    | Eliminar producto           | JWT (Admin)   |
-| GET    | `/api/categories`      | Listar categorías           | No            |
-| POST   | `/api/categories`      | Crear categoría             | JWT (Admin)   |
-| PUT    | `/api/categories/:id`  | Actualizar categoría        | JWT (Admin)   |
-| DELETE | `/api/categories/:id`  | Eliminar categoría          | JWT (Admin)   |
-| GET    | `/api/gallery`         | Listar galería              | No            |
-| POST   | `/api/gallery`         | Subir imagen a galería      | JWT (Admin)   |
-| DELETE | `/api/gallery/:id`     | Eliminar imagen de galería  | JWT (Admin)   |
-| POST   | `/api/upload`          | Subir imagen (Cloudinary)   | JWT (Admin)   |
-| GET    | `/api/health`          | Health check del servidor   | No            |
-
----
-
-## 🌐 Despliegue
-
-| Componente | Plataforma         |
-|------------|--------------------|
-| Frontend   | AWS S3 (Static)    |
-| Backend    | AWS EC2 / Render   |
-| Base de Datos | MongoDB Atlas   |
-| Imágenes   | Cloudinary         |
+| Metodo | Ruta                  | Descripcion                | Auth        |
+| ------ | --------------------- | -------------------------- | ----------- |
+| POST   | `/api/auth/register`  | Registro de usuario        | No          |
+| POST   | `/api/auth/login`     | Inicio de sesion           | No          |
+| GET    | `/api/products`       | Listar productos           | No          |
+| POST   | `/api/products`       | Crear producto             | JWT (Admin) |
+| PUT    | `/api/products/:id`   | Actualizar producto        | JWT (Admin) |
+| DELETE | `/api/products/:id`   | Eliminar producto          | JWT (Admin) |
+| GET    | `/api/categories`     | Listar categorias          | No          |
+| POST   | `/api/categories`     | Crear categoria            | JWT (Admin) |
+| PUT    | `/api/categories/:id` | Actualizar categoria       | JWT (Admin) |
+| DELETE | `/api/categories/:id` | Eliminar categoria         | JWT (Admin) |
+| GET    | `/api/gallery`        | Listar galeria             | No          |
+| POST   | `/api/gallery`        | Subir imagen a galeria     | JWT (Admin) |
+| DELETE | `/api/gallery/:id`    | Eliminar imagen de galeria | JWT (Admin) |
+| POST   | `/api/upload`         | Subir imagen (Cloudinary)  | JWT (Admin) |
+| GET    | `/api/health`         | Health check del servidor  | No          |
 
 ---
 
-## ✨ Funcionalidades
+## Despliegue
 
-- 🛍️ **Catálogo de productos** — Navegación por categorías con filtros
-- 📷 **Galería de fotos** — Muestra de arreglos realizados
-- 🔐 **Panel de administración** — CRUD completo para productos, categorías y galería
-- 🔑 **Autenticación JWT** — Login seguro con roles (admin/cliente)
-- ☁️ **Subida de imágenes a Cloudinary** — Almacenamiento optimizado en la nube
-- 📱 **Diseño responsive** — Adaptado para móvil con menú hamburguesa
-- 💬 **Integración con WhatsApp** — Botón de contacto directo
-- 🎨 **Animaciones AOS** — Transiciones suaves al hacer scroll
+| Componente    | Plataforma       |
+| ------------- | ---------------- |
+| Frontend      | AWS S3 (Static)  |
+| Backend       | AWS EC2 / Render |
+| Base de Datos | MongoDB Atlas    |
+| Imagenes      | Cloudinary       |
 
 ---
 
-## 📍 Información del Negocio
+## Funcionalidades
 
-| Dato        | Detalle                          |
-|-------------|----------------------------------|
-| 📍 Dirección | Transversal 73 #11C-20, Bogotá  |
-| 🏪 Local     | Carnova Premium                  |
-| 📞 Teléfono  | 311 458 2898                     |
-| 🕐 Horario   | Lun - Sáb: 9:00am - 7:00pm     |
-
----
-
-## 👥 Equipo
-
-Desarrollado con 💚 por el equipo de **Flores By Dolly**.
+- **Catalogo de productos** - Navegacion por categorias con filtros
+- **Galeria de fotos** - Muestra de arreglos realizados
+- **Panel de administracion** - CRUD completo para productos, categorias y galeria
+- **Autenticacion JWT** - Login seguro con roles (admin/cliente)
+- **Subida de imagenes a Cloudinary** - Almacenamiento optimizado en la nube
+- **Diseno responsive** - Adaptado para movil con menu hamburguesa
+- **Integracion con WhatsApp** - Boton de contacto directo
+- **Animaciones AOS** - Transiciones suaves al hacer scroll
 
 ---
 
-## 📄 Licencia
+## Informacion del Negocio
 
-Este proyecto está bajo la licencia ISC.
-]]>
+| Dato      | Detalle                        |
+| --------- | ------------------------------ |
+| Direccion | Transversal 73 #11C-20, Bogota |
+| Local     | Carnova Premium                |
+| Telefono  | 311 458 2898                   |
+| Horario   | Lun - Sab: 9:00am - 7:00pm     |
+
+---
+
+## Equipo
+
+Desarrollado con amor por el equipo de **Flores By Dolly**.
+
+---
+
+## Licencia
+
+Este proyecto esta bajo la licencia ISC.
