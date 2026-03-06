@@ -17,6 +17,7 @@ app.use(cors({
         'https://www.floresbydolly.com',
         'https://floresbydolly.com',
         'https://floresbydolly.onrender.com',
+        'http://f-floresbydolly.s3-website.us-east-2.amazonaws.com',
     ],
     credentials: true,
 }));
