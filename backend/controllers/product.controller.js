@@ -1,13 +1,25 @@
 const Product = require('../models/Product');
+const Category = require('../models/Category');
 
 // GET /api/products — Listar todos (público, con filtro opcional)
 exports.getAll = async (req, res) => {
     try {
         const filter = {};
 
-        // Filtro por categoría (query param)
+        // Filtro por categoría ObjectId (query param)
         if (req.query.category) {
             filter.category = req.query.category;
+        }
+
+        // Filtro por slug de categoría — busca el _id de la categoría primero
+        if (req.query.categorySlug) {
+            const cat = await Category.findOne({ slug: req.query.categorySlug });
+            if (cat) {
+                filter.category = cat._id;
+            } else {
+                // Si no existe la categoría, devolver lista vacía
+                return res.json({ success: true, count: 0, data: [] });
+            }
         }
 
         // Solo activos para público, todos para admin
