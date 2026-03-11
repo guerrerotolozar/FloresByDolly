@@ -28,7 +28,7 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th>Orden</th>
                         <th>Nombre</th>
                         <th>Categoría</th>
                         <th>Precio</th>
@@ -37,9 +37,23 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for (p of products; track p._id; let i = $index) {
-                    <tr [class.inactive]="!p.isActive">
-                        <td>{{ i + 1 }}</td>
+                    @for (p of products; track p._id; let idx = $index, first = $first, last = $last) {
+                    <tr [class.inactive]="!p.isActive" 
+                        [class.moving-up]="movingIds[p._id || ''] === 'up'"
+                        [class.moving-down]="movingIds[p._id || ''] === 'down'">
+                        <td class="align-middle text-center" style="width: 70px;">
+                            <div class="d-flex flex-column align-items-center gap-1">
+                                <button class="btn btn-sm btn-light p-0" style="width: 26px; height: 26px;"
+                                    (click)="moveProduct(idx, -1)" [disabled]="first" title="Mover arriba">
+                                    <i class="fas fa-chevron-up text-muted" style="font-size: 0.75rem;"></i>
+                                </button>
+                                <span class="fw-bold text-success" style="font-size: 0.95rem;">{{ p.order || 0 }}</span>
+                                <button class="btn btn-sm btn-light p-0" style="width: 26px; height: 26px;"
+                                    (click)="moveProduct(idx, 1)" [disabled]="last" title="Mover abajo">
+                                    <i class="fas fa-chevron-down text-muted" style="font-size: 0.75rem;"></i>
+                                </button>
+                            </div>
+                        </td>
                         <td>
                             <div class="product-name">
                                 @if (p.badgeLabel) {
@@ -56,13 +70,13 @@
                                 {{ p.isActive ? 'Activo' : 'Inactivo' }}
                             </button>
                         </td>
-                        <td>
-                            <div class="action-buttons">
-                                <a [routerLink]="['/admin/productos', p._id]" class="btn-action edit" title="Editar">
-                                    <i class="fas fa-edit"></i>
+                        <td class="align-middle text-nowrap">
+                            <div class="d-flex gap-2">
+                                <a [routerLink]="['/admin/productos', p._id]" class="btn-action bg-success-subtle text-success" title="Editar">
+                                    <i class="fas fa-pencil-alt"></i>
                                 </a>
-                                <button class="btn-action delete" (click)="deleteProduct(p)" title="Eliminar">
-                                    <i class="fas fa-trash"></i>
+                                <button class="btn-action bg-danger-subtle text-danger" (click)="deleteProduct(p)" title="Eliminar">
+                                    <i class="fas fa-trash-alt"></i>
                                 </button>
                             </div>
                         </td>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+  import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { ProductService, Product } from '../../services/product.service';
@@ -17,6 +17,13 @@ export class Catalogo implements OnInit {
   products: Product[] = [];
   categories: Category[] = [];
   loading = true;
+
+  // Extras — productos de la categoría "El Toque Perfecto"
+  extras: Product[] = [];
+  selectedExtras: Product[] = [];
+
+  // Referencia al contenedor del carrusel para scroll programático
+  @ViewChild('extrasTrack') extrasTrack!: ElementRef<HTMLDivElement>;
 
   // Número de WhatsApp del negocio
   private readonly whatsapp = '573114582898';
@@ -52,6 +59,13 @@ export class Catalogo implements OnInit {
         this.categories = res.data as Category[];
       },
     });
+
+    // Cargar extras de "El Toque Perfecto"
+    this.productSvc.getByCategorySlug('el-toque-perfecto').subscribe({
+      next: (res) => {
+        this.extras = res.data as Product[];
+      },
+    });
   }
 
   get filteredItems(): Product[] {
@@ -67,37 +81,74 @@ export class Catalogo implements OnInit {
     this.activeFilter = filter;
   }
 
+  // ═══ Lightbox ═══
+
   openLightbox(item: Product) {
     this.lightboxItem = item;
+    this.selectedExtras = []; // Limpiar extras al abrir un nuevo producto
   }
 
   closeLightbox() {
     this.lightboxItem = null;
+    this.selectedExtras = [];
   }
 
-  // Obtener URL de imagen (soporta Cloudinary URLs y rutas relativas viejas)
+  // ═══ Extras ═══
+
+  toggleExtra(extra: Product) {
+    const idx = this.selectedExtras.findIndex((e) => e._id === extra._id);
+    if (idx >= 0) {
+      this.selectedExtras.splice(idx, 1);
+    } else {
+      this.selectedExtras.push(extra);
+    }
+  }
+
+  isExtraSelected(extra: Product): boolean {
+    return this.selectedExtras.some((e) => e._id === extra._id);
+  }
+
+  scrollExtras(direction: 'left' | 'right') {
+    if (!this.extrasTrack) return;
+    const container = this.extrasTrack.nativeElement;
+    const scrollAmount = 200;
+    container.scrollBy({
+      left: direction === 'left' ? -scrollAmount : scrollAmount,
+      behavior: 'smooth',
+    });
+  }
+
+  // ═══ Imágenes ═══
+
   getImageUrl(product: Product): string {
     if (!product.image) return 'assets/img/placeholder.jpg';
     if (product.image.startsWith('http')) return product.image;
     return `https://floresbydolly.onrender.com${product.image}`;
   }
 
-  // Obtener nombre de categoría
+  // ═══ WhatsApp URLs ═══
+
   getCategoryName(product: Product): string {
     if (typeof product.category === 'object') return product.category.name;
     return '';
   }
 
-  // Generar URL de WhatsApp para consultar producto
   getWhatsappUrl(product: Product): string {
     const msg =
       product.whatsappMsg || `Hola! Me interesa ${product.name}. ¿Qué disponibilidad tienen?`;
     return `https://wa.me/${this.whatsapp}?text=${encodeURIComponent(msg)}`;
   }
 
-  // Generar URL de WhatsApp para ordenar
+  // Genera URL de WhatsApp con producto principal + extras seleccionados
   getOrderUrl(product: Product): string {
-    const msg = `Hola! Quiero hacer un pedido de ${product.name}. ¿Cuál es el precio y disponibilidad?`;
+    let msg = `Hola! Quiero hacer un pedido de *${product.name}*.`;
+
+    if (this.selectedExtras.length > 0) {
+      const extraNames = this.selectedExtras.map((e) => `• ${e.name}`).join('\n');
+      msg += `\n\nCon los siguientes extras:\n${extraNames}`;
+    }
+
+    msg += '\n\n¿Cuál es el precio y disponibilidad?';
     return `https://wa.me/${this.whatsapp}?text=${encodeURIComponent(msg)}`;
   }
 }

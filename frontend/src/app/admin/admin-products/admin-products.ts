@@ -13,6 +13,7 @@ import { ProductService, Product } from '../../services/product.service';
 export class AdminProducts implements OnInit {
   products: Product[] = [];
   loading = true;
+  movingIds: { [id: string]: 'up' | 'down' } = {};
 
   constructor(private productSvc: ProductService) {}
 
@@ -24,7 +25,7 @@ export class AdminProducts implements OnInit {
     this.loading = true;
     this.productSvc.getAll(true).subscribe({
       next: (res) => {
-        this.products = res.data as Product[];
+        this.products = (res.data as Product[]).sort((a, b) => (a.order || 0) - (b.order || 0));
         this.loading = false;
       },
       error: () => (this.loading = false),
@@ -51,5 +52,41 @@ export class AdminProducts implements OnInit {
       return product.category.name;
     }
     return '';
+  }
+
+  moveProduct(index: number, direction: number): void {
+    const targetIndex = index + direction;
+    if (targetIndex < 0 || targetIndex >= this.products.length) return;
+
+    if (Object.keys(this.movingIds).length > 0) return; // Prevent spam clicking
+
+    const currentProd = this.products[index];
+    const targetProd = this.products[targetIndex];
+
+    // Safe zero fallback if order doesn't exist
+    const currentOrder = currentProd.order || 0;
+    const targetOrder = targetProd.order || 0;
+
+    // 1. Activar las clases CSS de movimiento
+    this.movingIds[currentProd._id!] = direction === -1 ? 'up' : 'down';
+    this.movingIds[targetProd._id!] = direction === -1 ? 'down' : 'up';
+
+    // 2. Esperar a que la transición CSS termine (300ms)
+    setTimeout(() => {
+      // Intercambiar valores de orden
+      currentProd.order = targetOrder;
+      targetProd.order = currentOrder;
+
+      // Intercambiar posiciones en el array local
+      this.products[index] = targetProd;
+      this.products[targetIndex] = currentProd;
+
+      // Limpiar animación
+      this.movingIds = {};
+
+      // Guardar en backend silenciosamente
+      this.productSvc.update(currentProd._id!, { order: currentProd.order } as any).subscribe();
+      this.productSvc.update(targetProd._id!, { order: targetProd.order } as any).subscribe();
+    }, 300);
   }
 }

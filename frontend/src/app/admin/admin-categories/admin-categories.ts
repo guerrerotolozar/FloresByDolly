@@ -15,8 +15,26 @@ export class AdminCategories implements OnInit {
   categories: Category[] = [];
   loading = true;
   showForm = false;
+  showIconPicker = false;
   editing: Category | null = null;
   uploading = false;
+  localPreview: string | null = null;
+  movingIds: { [id: string]: 'up' | 'down' } = {};
+
+  availableIcons = [
+    { class: 'fas fa-leaf', name: 'Hoja' },
+    { class: 'fas fa-seedling', name: 'Brote' },
+    { class: 'fas fa-tree', name: 'Árbol' },
+    { class: 'fas fa-gift', name: 'Regalo' },
+    { class: 'fas fa-heart', name: 'Corazón' },
+    { class: 'fas fa-star', name: 'Estrella' },
+    { class: 'fas fa-crown', name: 'Corona' },
+    { class: 'fas fa-gem', name: 'Diamante' },
+    { class: 'fas fa-spa', name: 'Spa / Loto' },
+    { class: 'fas fa-sun', name: 'Sol' },
+    { class: 'fas fa-ribbon', name: 'Cinta' },
+    { class: 'fas fa-shopping-bag', name: 'Bolsa de compras' },
+  ];
 
   form = {
     name: '',
@@ -43,7 +61,7 @@ export class AdminCategories implements OnInit {
     this.loading = true;
     this.categorySvc.getAll(true).subscribe({
       next: (res) => {
-        this.categories = res.data as Category[];
+        this.categories = (res.data as Category[]).sort((a, b) => a.order - b.order);
         this.loading = false;
       },
       error: () => (this.loading = false),
@@ -63,6 +81,7 @@ export class AdminCategories implements OnInit {
       color: '#13592a',
     };
     this.editing = null;
+    this.localPreview = null;
     this.showForm = true;
   }
 
@@ -79,6 +98,7 @@ export class AdminCategories implements OnInit {
       color: cat.color || '#13592a',
     };
     this.editing = cat;
+    this.localPreview = null;
     this.showForm = true;
   }
 
@@ -96,8 +116,18 @@ export class AdminCategories implements OnInit {
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (!input.files?.length) return;
+
+    const file = input.files[0];
+
+    // Vista previa local inmediata
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.localPreview = e.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+
     this.uploading = true;
-    this.uploadSvc.upload(input.files[0]).subscribe({
+    this.uploadSvc.upload(file).subscribe({
       next: (res) => {
         this.form.image = res.data.url;
         this.uploading = false;
@@ -146,5 +176,42 @@ export class AdminCategories implements OnInit {
         this.categories = this.categories.filter((c) => c._id !== cat._id);
       },
     });
+  }
+
+  getIconName(iconClass: string): string {
+    return this.availableIcons.find((i) => i.class === iconClass)?.name || 'Elegir Icono';
+  }
+
+  moveCategory(index: number, direction: number): void {
+    const targetIndex = index + direction;
+    if (targetIndex < 0 || targetIndex >= this.categories.length) return;
+
+    if (Object.keys(this.movingIds).length > 0) return; // Prevent spam clicking
+
+    const currentCat = this.categories[index];
+    const targetCat = this.categories[targetIndex];
+
+    // 1. Activar las clases CSS de movimiento
+    this.movingIds[currentCat._id] = direction === -1 ? 'up' : 'down';
+    this.movingIds[targetCat._id] = direction === -1 ? 'down' : 'up';
+
+    // 2. Esperar a que la transición CSS termine (300ms)
+    setTimeout(() => {
+      // Intercambiar valores de orden
+      const tempOrder = currentCat.order;
+      currentCat.order = targetCat.order;
+      targetCat.order = tempOrder;
+
+      // Intercambiar posiciones en el array local
+      this.categories[index] = targetCat;
+      this.categories[targetIndex] = currentCat;
+
+      // Limpiar animación
+      this.movingIds = {};
+
+      // Guardar en backend silenciosamente
+      this.categorySvc.update(currentCat._id, { order: currentCat.order } as any).subscribe();
+      this.categorySvc.update(targetCat._id, { order: targetCat.order } as any).subscribe();
+    }, 300);
   }
 }

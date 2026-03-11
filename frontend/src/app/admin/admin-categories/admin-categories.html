@@ -10,67 +10,98 @@
 
     <!-- Inline Form -->
     @if (showForm) {
-    <div class="section-card form-card mb-3">
-        <h4>{{ editing ? 'Editar' : 'Nueva' }} Categoría</h4>
+    <div class="section-card form-card mb-4">
+        <h4 class="form-title mb-4">{{ editing ? 'Editar' : 'Nueva' }} Categoría</h4>
         <form (ngSubmit)="save()">
-            <div class="row">
-                <div class="col-md-3 mb-2">
-                    <label class="form-label">Nombre *</label>
-                    <input type="text" class="form-control" [(ngModel)]="form.name" name="name" (input)="autoSlug()"
-                        placeholder="Diseños de Autor" />
-                </div>
-                <div class="col-md-3 mb-2">
-                    <label class="form-label">Slug</label>
-                    <input type="text" class="form-control" [(ngModel)]="form.slug" name="slug"
-                        placeholder="disenos-de-autor" />
-                </div>
-                <div class="col-md-2 mb-2">
-                    <label class="form-label">Icono</label>
-                    <input type="text" class="form-control" [(ngModel)]="form.icon" name="icon"
-                        placeholder="fas fa-leaf" />
-                </div>
-                <div class="col-md-2 mb-2">
-                    <label class="form-label">Orden</label>
-                    <input type="number" class="form-control" [(ngModel)]="form.order" name="order" />
-                </div>
-                <div class="col-md-2 mb-2">
-                    <label class="form-label">Color del card</label>
-                    <input type="color" class="form-control form-control-color" [(ngModel)]="form.color" name="color" />
-                </div>
-            </div>
-            <div class="row mt-2">
-                <div class="col-md-6 mb-2">
-                    <label class="form-label">Descripción (para la card del Home)</label>
-                    <input type="text" class="form-control" [(ngModel)]="form.description" name="description"
-                        placeholder="Una breve descripción de esta categoría..." />
-                </div>
-                <div class="col-md-4 mb-2">
-                    <label class="form-label">Imagen del card</label>
-                    <input type="file" class="form-control" accept="image/*" (change)="onFileSelected($event)" />
-                    @if (uploading) {
-                    <small class="text-muted"><i class="fas fa-spinner fa-spin me-1"></i>Subiendo...</small>
-                    }
-                    @if (form.image) {
-                    <div class="mt-1">
-                        <img [src]="form.image" alt="Preview" style="height: 50px; border-radius: 4px;" />
+            <div class="row g-4">
+                <!-- Bloque Izquierdo -->
+                <div class="col-12 col-lg-6">
+                    <div class="mb-3">
+                        <label class="form-label">Nombre *</label>
+                        <input type="text" class="form-control" [(ngModel)]="form.name" name="name" (input)="autoSlug()"
+                            placeholder="Diseños de Autor" />
                     </div>
-                    }
-                </div>
-                <div class="col-md-2 mb-2 d-flex flex-column justify-content-end">
-                    <div class="form-check mb-2">
-                        <input type="checkbox" class="form-check-input" [(ngModel)]="form.showOnHome" name="showOnHome"
-                            id="showOnHome" />
-                        <label class="form-check-label" for="showOnHome">
-                            <i class="fas fa-home me-1"></i>Mostrar en Home
-                        </label>
+                    <div class="mb-3">
+                        <label class="form-label">Slug</label>
+                        <input type="text" class="form-control" [(ngModel)]="form.slug" name="slug"
+                            placeholder="disenos-de-autor" />
                     </div>
-                    <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-save btn-sm">
-                            <i class="fas fa-check me-1"></i> Guardar
+                    <div class="mb-3 position-relative">
+                        <label class="form-label">Icono</label>
+                        <button
+                            class="btn btn-outline-secondary w-100 d-flex justify-content-between align-items-center"
+                            type="button" (click)="showIconPicker = !showIconPicker">
+                            <span><i [class]="form.icon" class="me-2 text-success"></i> {{ getIconName(form.icon)
+                                }}</span>
+                            <i class="fas fa-chevron-down"></i>
                         </button>
-                        <button type="button" class="btn btn-outline-secondary btn-sm" (click)="showForm = false">
-                            Cancelar
-                        </button>
+
+                        @if (showIconPicker) {
+                        <div class="position-absolute bg-white border rounded shadow p-3 mt-1"
+                            style="width: 100%; z-index: 1000; left: 0;">
+                            <div class="d-flex flex-wrap gap-2 justify-content-center">
+                                @for (i of availableIcons; track i.class) {
+                                <button type="button" class="btn btn-sm" [class.btn-success]="form.icon === i.class"
+                                    [class.btn-outline-secondary]="form.icon !== i.class"
+                                    (click)="form.icon = i.class; showIconPicker = false" title="{{ i.name }}">
+                                    <i [class]="i.class" style="font-size: 1.1rem; width: 24px;"></i>
+                                </button>
+                                }
+                            </div>
+                        </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Bloque Derecho -->
+                <div class="col-12 col-lg-6">
+                    <div class="mb-3">
+                        <label class="form-label">Descripción (para la card del Home)</label>
+                        <input type="text" class="form-control" [(ngModel)]="form.description" name="description"
+                            placeholder="Una breve descripción de esta categoría..." />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Imagen del card</label>
+                        <input type="file" class="form-control" accept="image/*" (change)="onFileSelected($event)" />
+                        @if (uploading) {
+                        <small class="text-muted d-block mt-1"><i class="fas fa-spinner fa-spin me-1"></i>Subiendo
+                            imagen...</small>
+                        }
+                        @if (localPreview || form.image) {
+                        <div class="mt-3 p-2 border rounded bg-light text-center">
+                            <img [src]="localPreview || form.image" alt="Preview" class="form-preview-img"
+                                style="max-height: 80px; width: auto; object-fit: contain;" />
+                        </div>
+                        }
+                    </div>
+
+                    <div class="row g-3 mt-1">
+                        <!-- Color y Checkbox -->
+                        <div class="col-12 col-sm-6">
+                            <label class="form-label">Color y Visibilidad</label>
+                            <div class="d-flex align-items-center gap-3">
+                                <input type="color" class="form-control form-control-color" [(ngModel)]="form.color"
+                                    name="color" title="Elige un color para la tarjeta" />
+                                <div class="form-check mb-0">
+                                    <input type="checkbox" class="form-check-input" [(ngModel)]="form.showOnHome"
+                                        name="showOnHome" id="showOnHome" />
+                                    <label class="form-check-label" for="showOnHome" style="cursor: pointer;">
+                                        <i class="fas fa-home me-1"></i>En Home
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Botones alineados a la derecha y abajo -->
+                        <div
+                            class="col-12 col-sm-6 d-flex flex-row align-items-end justify-content-sm-end gap-2 mt-4 mt-sm-0">
+                            <button type="button" class="btn btn-outline-secondary px-3" (click)="showForm = false">
+                                Cancelar
+                            </button>
+                            <button type="submit" class="btn btn-save px-4">
+                                <i class="fas fa-check me-1"></i> Guardar
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -99,33 +130,53 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for (cat of categories; track cat._id) {
-                    <tr [class.inactive]="!cat.isActive">
-                        <td>{{ cat.order }}</td>
-                        <td><i [class]="cat.icon" class="category-icon"></i></td>
-                        <td class="fw-bold">{{ cat.name }}</td>
-                        <td class="text-muted">{{ cat.slug }}</td>
-                        <td>
+                    @for (cat of categories; track cat._id; let idx = $index, first = $first, last = $last) {
+                    <tr [class.inactive]="!cat.isActive" [class.moving-up]="movingIds[cat._id] === 'up'"
+                        [class.moving-down]="movingIds[cat._id] === 'down'">
+                        <td class="align-middle text-center" style="width: 70px;">
+                            <div class="d-flex flex-column align-items-center gap-1">
+                                <button class="btn btn-sm btn-light p-0" style="width: 26px; height: 26px;"
+                                    (click)="moveCategory(idx, -1)" [disabled]="first" title="Mover arriba">
+                                    <i class="fas fa-chevron-up text-muted" style="font-size: 0.75rem;"></i>
+                                </button>
+                                <span class="fw-bold text-success" style="font-size: 0.95rem;">{{ cat.order }}</span>
+                                <button class="btn btn-sm btn-light p-0" style="width: 26px; height: 26px;"
+                                    (click)="moveCategory(idx, 1)" [disabled]="last" title="Mover abajo">
+                                    <i class="fas fa-chevron-down text-muted" style="font-size: 0.75rem;"></i>
+                                </button>
+                            </div>
+                        </td>
+                        <td class="align-middle"><i [class]="cat.icon" class="category-icon"></i></td>
+                        <td class="align-middle fw-bold">{{ cat.name }}</td>
+                        <td class="align-middle text-muted">{{ cat.slug }}</td>
+                        <td class="align-middle">
                             <button class="btn-toggle-status" [class.active]="cat.showOnHome" (click)="toggleHome(cat)"
                                 title="Mostrar en Home">
                                 <i [class]="cat.showOnHome ? 'fas fa-home' : 'far fa-square'"></i>
                             </button>
                         </td>
-                        <td>
+                        <td class="align-middle">
                             <button class="btn-toggle-status" [class.active]="cat.isActive" (click)="toggleActive(cat)">
                                 <i [class]="cat.isActive ? 'fas fa-toggle-on' : 'fas fa-toggle-off'"></i>
                             </button>
                         </td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn-action edit" (click)="openEdit(cat)">
-                                    <i class="fas fa-edit"></i>
+                        <td class="align-middle text-nowrap">
+                            <div class="d-flex gap-2 justify-content-center">
+                                <button class="btn-action bg-success-subtle text-success" (click)="openEdit(cat)"
+                                    title="Editar">
+                                    <i class="fas fa-pencil-alt"></i>
                                 </button>
-                                <button class="btn-action delete" (click)="deleteCategory(cat)">
-                                    <i class="fas fa-trash"></i>
+                                <button class="btn-action bg-danger-subtle text-danger" (click)="deleteCategory(cat)"
+                                    title="Eliminar">
+                                    <i class="fas fa-trash-alt"></i>
                                 </button>
                             </div>
                         </td>
+                    </tr>
+                    }
+                    @empty {
+                    <tr>
+                        <td colspan="7" class="text-center text-muted py-4">No hay categorías para mostrar.</td>
                     </tr>
                     }
                 </tbody>

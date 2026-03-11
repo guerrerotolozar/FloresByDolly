@@ -49,19 +49,19 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Características <small class="text-muted">(una por línea)</small></label>
+                    <label class="form-label">Detalles / Beneficios <small class="text-muted">(uno por línea)</small></label>
                     <textarea class="form-control" [(ngModel)]="featuresText" name="features" rows="4"
                         placeholder="Duración: 10-14 días&#10;Colores: Rosado, Amarillo&#10;Uso: Ramos, Centros de mesa"></textarea>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Tags <small class="text-muted">(separados por coma)</small></label>
+                    <label class="form-label">Etiquetas de Búsqueda <small class="text-muted">(separadas por coma)</small></label>
                     <input type="text" class="form-control" [(ngModel)]="tagsText" name="tags"
                         placeholder="Duraderas, Coloridas, Versátiles" />
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Mensaje WhatsApp</label>
+                    <label class="form-label">Mensaje Predefinido para WhatsApp</label>
                     <textarea class="form-control" [(ngModel)]="product.whatsappMsg" name="whatsappMsg" rows="2"
                         placeholder="Hola! Me interesan las Astromelias..."></textarea>
                 </div>
@@ -86,25 +86,20 @@
 
                 <div class="row">
                     <div class="col-6 mb-3">
-                        <label class="form-label">Badge Label</label>
+                        <label class="form-label">Etiqueta Especial <small class="text-muted">(Opcional)</small></label>
                         <input type="text" class="form-control" [(ngModel)]="product.badgeLabel" name="badgeLabel"
-                            placeholder="Más Vendida" />
+                            placeholder="Ej: Más Vendida" />
                     </div>
                     <div class="col-6 mb-3">
-                        <label class="form-label">Badge Class</label>
+                        <label class="form-label">Color de Etiqueta</label>
                         <select class="form-select" [(ngModel)]="product.badgeClass" name="badgeClass">
                             <option value="bg-success">Verde</option>
-                            <option value="bg-info">Azul</option>
+                            <option value="bg-info">Azul Claro</option>
                             <option value="bg-warning text-dark">Amarillo</option>
                             <option value="bg-danger">Rojo</option>
                             <option value="bg-purple">Morado</option>
                         </select>
                     </div>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Orden</label>
-                    <input type="number" class="form-control" [(ngModel)]="product.order" name="order" />
                 </div>
 
                 <div class="form-check form-switch mb-3">

@@ -203,18 +203,86 @@
     </div>
 </section>
 
-<!-- Modal Lightbox -->
+<!-- Modal Lightbox con Extras -->
 @if (lightboxItem) {
 <div class="lightbox-backdrop" (click)="closeLightbox()">
     <div class="lightbox-content" (click)="$event.stopPropagation()">
         <button class="lightbox-close" (click)="closeLightbox()">&times;</button>
-        <img [src]="getImageUrl(lightboxItem)" [alt]="lightboxItem.name" class="img-fluid">
-        <div class="lightbox-footer">
-            <h5>{{ lightboxItem.name }}</h5>
-            <p>{{ lightboxItem.description }}</p>
-            <a [href]="getWhatsappUrl(lightboxItem)" target="_blank" class="btn btn-success">
-                <i class="fab fa-whatsapp me-2"></i>Consultar este producto
-            </a>
+
+        <div class="lightbox-body">
+            <!-- Imagen del producto -->
+            <div class="lightbox-image">
+                <img [src]="getImageUrl(lightboxItem)" [alt]="lightboxItem.name" class="img-fluid">
+            </div>
+
+            <!-- Info + Extras -->
+            <div class="lightbox-info">
+                <h4 class="lightbox-product-name">{{ lightboxItem.name }}</h4>
+                <p class="lightbox-product-desc">{{ lightboxItem.description }}</p>
+
+                @if (lightboxItem.price) {
+                <span class="lightbox-price-badge">{{ lightboxItem.price }}</span>
+                }
+
+                <!-- Carrusel de Extras -->
+                @if (extras.length > 0) {
+                <div class="extras-section">
+                    <h6 class="extras-title">
+                        <i class="fas fa-gift me-2"></i>El Toque Perfecto
+                    </h6>
+                    <p class="extras-subtitle">Agrega un extra especial a tu pedido</p>
+
+                    <div class="extras-carousel">
+                        <button class="extras-arrow extras-arrow-left" (click)="scrollExtras('left')">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <div class="extras-track" #extrasTrack>
+                            @for (extra of extras; track extra._id) {
+                            <div class="extras-item" [class.selected]="isExtraSelected(extra)"
+                                (click)="toggleExtra(extra)">
+                                <div class="extras-item-img">
+                                    <img [src]="getImageUrl(extra)" [alt]="extra.name">
+                                    @if (isExtraSelected(extra)) {
+                                    <div class="extras-check">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    }
+                                </div>
+                                <span class="extras-item-name">{{ extra.name }}</span>
+                            </div>
+                            }
+                        </div>
+                        <button class="extras-arrow extras-arrow-right" (click)="scrollExtras('right')">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+
+                    <!-- Extras seleccionados -->
+                    @if (selectedExtras.length > 0) {
+                    <div class="selected-extras-list">
+                        <small class="text-success fw-bold">
+                            <i class="fas fa-check-circle me-1"></i>Seleccionados:
+                        </small>
+                        @for (sel of selectedExtras; track sel._id) {
+                        <span class="selected-extra-tag">
+                            {{ sel.name }}
+                            <i class="fas fa-times ms-1" (click)="toggleExtra(sel)"></i>
+                        </span>
+                        }
+                    </div>
+                    }
+                </div>
+                }
+
+                <!-- Botón de pedido -->
+                <a [href]="getOrderUrl(lightboxItem)" target="_blank" class="btn btn-success btn-order-wa w-100">
+                    <i class="fab fa-whatsapp me-2"></i>Hacer Pedido
+                    @if (selectedExtras.length > 0) {
+                    <span class="ms-1">(+ {{ selectedExtras.length }} extra{{ selectedExtras.length > 1 ? 's' : ''
+                        }})</span>
+                    }
+                </a>
+            </div>
         </div>
     </div>
 </div>

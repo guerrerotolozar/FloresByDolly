@@ -45,6 +45,10 @@ export class ProductService {
     return this.http.get<ProductResponse>(url);
   }
 
+  getByCategorySlug(slug: string): Observable<ProductResponse> {
+    return this.http.get<ProductResponse>(`${this.API}?categorySlug=${slug}`);
+  }
+
   getById(id: string): Observable<ProductResponse> {
     return this.http.get<ProductResponse>(`${this.API}/${id}`);
   }

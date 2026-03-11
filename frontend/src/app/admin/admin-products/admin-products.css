@@ -140,3 +140,24 @@ tr.inactive {
 .empty-state p {
     color: #888;
 }
+
+/* Animations for Product Reordering */
+tbody tr {
+    background-color: white; /* Important so they hide each other when crossing */
+}
+
+tbody tr.moving-up {
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    transform: translateY(-100%);
+    z-index: 10;
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+tbody tr.moving-down {
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    transform: translateY(100%);
+    z-index: 5;
+    position: relative;
+    opacity: 0.9;
+}
