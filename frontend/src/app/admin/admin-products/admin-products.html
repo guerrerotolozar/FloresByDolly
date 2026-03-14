@@ -47,7 +47,7 @@
                                     (click)="moveProduct(idx, -1)" [disabled]="first" title="Mover arriba">
                                     <i class="fas fa-chevron-up text-muted" style="font-size: 0.75rem;"></i>
                                 </button>
-                                <span class="fw-bold text-success" style="font-size: 0.95rem;">{{ p.order || 0 }}</span>
+                                <span class="fw-bold text-success" style="font-size: 0.95rem;">{{ idx + 1 }}</span>
                                 <button class="btn btn-sm btn-light p-0" style="width: 26px; height: 26px;"
                                     (click)="moveProduct(idx, 1)" [disabled]="last" title="Mover abajo">
                                     <i class="fas fa-chevron-down text-muted" style="font-size: 0.75rem;"></i>

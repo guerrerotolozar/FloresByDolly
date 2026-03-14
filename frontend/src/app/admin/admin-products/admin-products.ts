@@ -63,19 +63,15 @@ export class AdminProducts implements OnInit {
     const currentProd = this.products[index];
     const targetProd = this.products[targetIndex];
 
-    // Safe zero fallback if order doesn't exist
-    const currentOrder = currentProd.order || 0;
-    const targetOrder = targetProd.order || 0;
-
     // 1. Activar las clases CSS de movimiento
     this.movingIds[currentProd._id!] = direction === -1 ? 'up' : 'down';
     this.movingIds[targetProd._id!] = direction === -1 ? 'down' : 'up';
 
     // 2. Esperar a que la transición CSS termine (300ms)
     setTimeout(() => {
-      // Intercambiar valores de orden
-      currentProd.order = targetOrder;
-      targetProd.order = currentOrder;
+      // En lugar de intercambiar variables (que podrian ser 0), forzamos un orden limpio
+      currentProd.order = targetIndex + 1;
+      targetProd.order = index + 1;
 
       // Intercambiar posiciones en el array local
       this.products[index] = targetProd;
