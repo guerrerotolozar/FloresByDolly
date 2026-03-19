@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { GalleryService, GalleryItem } from '../../services/gallery.service';
 import { UploadService } from '../../services/upload.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-admin-gallery',
@@ -154,7 +155,9 @@ export class AdminGallery implements OnInit {
   getImageUrl(image: string): string {
     if (!image) return '';
     if (image.startsWith('http')) return image;
-    return `https://floresbydolly.onrender.com${image}`;
+    // Use the environment API base URL (without /api) for relative image paths
+    const baseUrl = environment.apiUrl.replace('/api', '');
+    return `${baseUrl}${image}`;
   }
 
   getCategoryLabel(category: string): string {

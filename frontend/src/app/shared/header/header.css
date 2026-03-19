@@ -110,6 +110,13 @@
 
 /* Responsive */
 @media (max-width: 991px) {
+    /* FIX: Esconder el menú colapsado en móvil SIEMPRE que no tenga la clase .show.
+       Esto previene el bug donde Bootstrap JS aún no cargó y el menú se muestra expandido
+       como texto crudo sin estilo (FOUC - Flash Of Unstyled Content). */
+    .navbar-collapse:not(.show) {
+        display: none !important;
+    }
+
     .navbar-nav {
         text-align: center;
         margin-top: 1rem;
