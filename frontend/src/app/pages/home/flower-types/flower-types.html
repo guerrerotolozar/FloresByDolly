@@ -26,7 +26,7 @@
             <div class="col-lg-3 col-md-6" data-aos="zoom-in" [attr.data-aos-delay]="150 + i * 150">
                 <div class="flor-card h-100" (click)="goToCatalog(cat.slug)" style="cursor: pointer;">
                     <div class="flor-image" [style.background-color]="cat.color">
-                        @if (cat.image) {
+                        @if (cat.productImage || cat.image) {
                         <img [src]="getImageUrl(cat)" [alt]="cat.name" class="img-fluid">
                         } @else {
                         <div class="flor-placeholder">

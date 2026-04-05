@@ -62,7 +62,11 @@
 
             <!-- Columna derecha: imagen -->
             <div class="form-image">
-                <label class="form-label fw-bold">Imagen *</label>
+                <label class="form-label fw-bold mb-1">Imagen *</label>
+                <p class="text-muted small mb-2">
+                    <i class="fas fa-info-circle text-info me-1"></i>
+                    Para que no se recorten feo, recomendamos subir fotos <strong>horizontales (4:3)</strong>, ej: 1200x900 px u 800x600 px. Centra el objeto principal en la foto.
+                </p>
                 <div class="upload-area" (click)="fileInput.click()">
                     @if (imagePreview) {
                     <img [src]="imagePreview" alt="Preview" class="upload-preview">
