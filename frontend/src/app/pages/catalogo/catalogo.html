@@ -86,7 +86,7 @@
         <div class="row g-4">
             @for (item of filteredItems; track item._id) {
             <div class="col-lg-4 col-md-6 producto-item" data-aos="zoom-in">
-                <div class="producto-card h-100">
+                <div class="producto-card h-100" (click)="openLightbox(item)" style="cursor: pointer;">
                     <div class="producto-image">
                         <img [src]="getImageUrl(item)" [alt]="item.name" class="img-fluid">
                         @if (item.badgeLabel) {
@@ -96,12 +96,9 @@
                         }
                         <div class="producto-overlay">
                             <div class="producto-actions">
-                                <button class="btn btn-warning btn-sm mb-2" (click)="openLightbox(item)">
-                                    <i class="fas fa-eye me-1"></i>Ver
+                                <button class="btn btn-warning btn-sm" (click)="openLightbox(item)">
+                                    <i class="fas fa-eye me-1"></i>Ver Detalles
                                 </button>
-                                <a [href]="getWhatsappUrl(item)" target="_blank" class="btn btn-success btn-sm">
-                                    <i class="fab fa-whatsapp me-1"></i>Consultar
-                                </a>
                             </div>
                         </div>
                     </div>
@@ -131,11 +128,6 @@
                         </div>
                         }
 
-                        <div class="producto-actions-bottom">
-                            <a [href]="getOrderUrl(item)" target="_blank" class="btn btn-primary w-100">
-                                <i class="fab fa-whatsapp me-2"></i>Hacer Pedido
-                            </a>
-                        </div>
                     </div>
                 </div>
             </div>

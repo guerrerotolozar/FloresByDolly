@@ -6,72 +6,181 @@
     background: linear-gradient(135deg, #f8fffe 0%, #f1f8f1 100%);
 }
 
-.special-card {
-    background: var(--flores-white);
+/* ===== GRID RESPONSIVO ===== */
+.arrangements-grid {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: 1fr; /* Móvil: 1 columna */
+}
+
+@media (min-width: 576px) {
+    .arrangements-grid {
+        grid-template-columns: repeat(2, 1fr); /* Tablet: 2 columnas */
+    }
+}
+
+@media (min-width: 992px) {
+    .arrangements-grid {
+        grid-template-columns: repeat(3, 1fr); /* Escritorio: 3 columnas */
+    }
+}
+
+/* ===== TARJETA DE PRODUCTO ===== */
+.product-card {
+    background: #fff;
     border-radius: 20px;
     overflow: hidden;
-    transition: all 0.3s ease;
-    box-shadow: 0 10px 30px rgba(19, 89, 42, 0.1);
-    border: 1px solid rgba(252, 211, 77, 0.2);
+    box-shadow: 0 8px 30px rgba(19, 89, 42, 0.1);
+    border: 1px solid rgba(252, 211, 77, 0.15);
+    transition: all 0.35s ease;
+    display: flex;
+    flex-direction: column;
 }
 
-.special-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(19, 89, 42, 0.2);
+.product-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 50px rgba(19, 89, 42, 0.2);
+    border-color: var(--flores-yellow, #FCD34D);
 }
 
-.special-image {
+/* ===== IMAGEN CUADRADA ===== */
+.card-image-wrapper {
     position: relative;
+    aspect-ratio: 1 / 1;
     overflow: hidden;
-    height: 250px;
+    background: #f0f7f1;
 }
 
-.special-image img {
+.card-image-wrapper img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.3s ease;
+    transition: transform 0.4s ease;
 }
 
-.special-card:hover .special-image img {
-    transform: scale(1.05);
+.product-card:hover .card-image-wrapper img {
+    transform: scale(1.06);
 }
 
-.special-overlay {
+/* ===== BADGE ===== */
+.card-badge {
     position: absolute;
-    top: 15px;
-    right: 15px;
+    top: 14px;
+    right: 14px;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #fff;
 }
 
-.badge-especial {
-    background: linear-gradient(45deg, #ff6b9d, #ff8cc8);
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+.badge-romantico {
+    background: linear-gradient(135deg, #e11d48, #f43f5e);
+    box-shadow: 0 4px 12px rgba(225, 29, 72, 0.35);
+}
+
+.badge-popular {
+    background: linear-gradient(135deg, var(--flores-yellow, #FCD34D), #f59e0b);
+    color: var(--flores-green-dark, #0B3D1A);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
+}
+
+.badge-premium {
+    background: linear-gradient(135deg, var(--flores-green, #13592a), #1e7a3a);
+    box-shadow: 0 4px 12px rgba(19, 89, 42, 0.35);
 }
 
 .badge-delicado {
-    background: linear-gradient(45deg, #a8e6cf, #88d8a3);
-    color: var(--flores-green-dark);
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    box-shadow: 0 4px 15px rgba(168, 230, 207, 0.3);
+    background: linear-gradient(135deg, #ec4899, #f472b6);
+    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.35);
 }
 
 .badge-variedad {
-    background: linear-gradient(45deg, #ffd93d, #ffb74d);
-    color: var(--flores-green-dark);
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    box-shadow: 0 4px 15px rgba(255, 217, 61, 0.3);
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: var(--flores-green-dark, #0B3D1A);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
+}
+
+.badge-exclusivo {
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.35);
+}
+
+/* ===== CUERPO DE LA TARJETA ===== */
+.card-body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--flores-green-dark, #0B3D1A);
+    margin-bottom: 0.5rem;
+}
+
+.card-desc {
+    font-size: 0.92rem;
+    color: #555;
+    line-height: 1.55;
+    margin-bottom: 1rem;
+}
+
+/* ===== LISTA DE CONFIANZA ===== */
+.trust-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+.trust-list li {
+    font-size: 0.85rem;
+    color: #444;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.trust-list li i {
+    color: var(--flores-green, #13592a);
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+/* ===== BOTÓN VER EN CATÁLOGO ===== */
+.btn-ver-catalogo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: auto;
+    padding: 0.85rem 1.5rem;
+    background: linear-gradient(135deg, var(--flores-green, #13592a), var(--flores-green-dark, #0B3D1A));
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+}
+
+.btn-ver-catalogo:hover {
+    background: linear-gradient(135deg, var(--flores-yellow, #FCD34D), var(--flores-yellow-dark, #F59E0B));
+    color: var(--flores-green-dark, #0B3D1A);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(252, 211, 77, 0.35);
+}
+
+.btn-ver-catalogo i {
+    font-size: 1.2rem;
 }
