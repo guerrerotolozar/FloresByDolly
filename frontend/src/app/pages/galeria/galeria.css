@@ -4,7 +4,7 @@
 
 /* ===== HERO ===== */
 .galeria-hero {
-    background: linear-gradient(135deg, var(--flores-green) 0%, var(--flores-green-dark) 100%);
+    background: linear-gradient(rgba(19, 89, 42, 0.7), rgba(13, 63, 28, 0.8)), url('../../../assets/img/galeria.jpg') center/cover no-repeat;
     padding-top: 120px !important;
     padding-bottom: 3rem;
     position: relative;

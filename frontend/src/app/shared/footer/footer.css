@@ -168,3 +168,14 @@
         max-width: 250px;
     }
 }
+
+/* Watermark Legal Text */
+.watermark-legal {
+    color: rgba(255, 255, 255, 0.2);
+    font-size: 0.75rem;
+    line-height: 1.5;
+    pointer-events: none;
+    user-select: none;
+    letter-spacing: 0.5px;
+    margin-bottom: 0;
+}
