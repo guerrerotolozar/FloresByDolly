@@ -1,6 +1,6 @@
 <div class="rifa-container">
   <div class="glass-card">
-
+    
     <div class="header-content">
       <img src="assets/img/logo_flores_dolly.jpg" alt="Flores By Dolly" class="logo">
       <h1 class="title">Aniversario FLORES By Dolly</h1>
@@ -8,12 +8,11 @@
 
     <!-- Imagen de la planta de regalo -->
     <div class="promo-box">
-      <img src="assets/img/planta_rifa_1.png" alt="Planta Artificial Arvore" class="planta-img">
+      <img src="assets/img/planta_rifa.png" alt="Planta Artificial Arvore" class="planta-img">
       <div class="promo-text">
         <p class="subtitle-bold">¡CELEBRA NUESTRO ANIVERSARIO!</p>
         <p class="subtitle-desc">
-          Regístrate en un minuto y participa en la gran rifa de esta hermosa planta <b>Arvore flor real Toque Rosa
-            90cm</b> este lunes 15 de junio.
+          Regístrate en un minuto y participa en la gran rifa de esta hermosa planta <b>Arvore flor real Toque Rosa 90cm</b> este lunes 15 de junio.
         </p>
         <div class="descuento-badge">
           <b>Déjanos tus referidos</b> y asegura automáticamente un <b>20% de DESCUENTO</b> para tu próxima compra.
@@ -30,24 +29,24 @@
 
       <div class="form-group">
         <label for="celular">Tu Número de Celular / WhatsApp *</label>
-        <input type="tel" inputmode="numeric" id="celular" name="celular" [(ngModel)]="formData.celular" required
-          placeholder="Ej: 3101234567" pattern="[0-9]{10}" maxlength="10" class="glass-input">
+        <input type="tel" inputmode="numeric" id="celular" name="celular" [(ngModel)]="formData.celular"
+          required placeholder="Ej: 3101234567" pattern="[0-9]{10}" maxlength="10" class="glass-input">
       </div>
 
       <!-- Sección de Referidos Dinámicos -->
       <div class="fechas-section">
         <h3 class="section-title">Nombres y Teléfonos de tus Referidos 📝</h3>
-
+        
         @for (item of referidos; track $index) {
         <div class="form-group fecha-extra-group">
           <div class="fecha-label-row">
             <label>Referido {{$index + 1}}</label>
             @if (referidos.length > 1) {
-            <button type="button" class="btn-remove" (click)="eliminarReferido($index)" title="Eliminar">✕</button>
+              <button type="button" class="btn-remove" (click)="eliminarReferido($index)" title="Eliminar">✕</button>
             }
           </div>
-          <input type="text" [name]="'ref_nombre_'+$index" [(ngModel)]="item.nombre" placeholder="Nombre de tu referido"
-            class="glass-input">
+          <input type="text" [name]="'ref_nombre_'+$index" [(ngModel)]="item.nombre"
+            placeholder="Nombre de tu referido" class="glass-input">
           <input type="tel" inputmode="numeric" [name]="'ref_celular_'+$index" [(ngModel)]="item.celular"
             placeholder="Celular (10 números)" pattern="[0-9]{10}" maxlength="10" class="glass-input">
         </div>
@@ -60,9 +59,9 @@
 
       <button type="submit" [disabled]="!isFormValid || isSubmitting" class="glass-button">
         @if (!isSubmitting) {
-        <span>Generar mi pase y confirmar</span>
+          <span>Generar mi pase y confirmar</span>
         } @else {
-        <span>Generando Pase...</span>
+          <span>Generando Pase...</span>
         }
       </button>
 
