@@ -1,0 +1,217 @@
+[
+  {
+    "coverage_id": "backend%2Fcontrollers%2Fregistro.controller.js%23POST%20%2Fapi%2Fregistro::backend%2Froutes%2Fregistro.routes.js%23Public%20raffle%20registration%20boundary::backend%2Fcontrollers%2Fregistro.controller.js::DATA-ISOLATION-AND-LIFECYCLE.md%23Data%20exposure%20across%20boundaries",
+    "canonical_refs": {
+      "surface": "backend/controllers/registro.controller.js#POST /api/registro",
+      "boundary": "backend/routes/registro.routes.js#Public raffle registration boundary",
+      "subsystem": "backend/controllers/registro.controller.js",
+      "attack_class": "DATA-ISOLATION-AND-LIFECYCLE.md#Data exposure across boundaries"
+    },
+    "surface": "backend/controllers/registro.controller.js#POST /api/registro",
+    "boundary": "backend/routes/registro.routes.js#Public raffle registration boundary",
+    "subsystem": "backend/controllers/registro.controller.js",
+    "attack_class": "DATA-ISOLATION-AND-LIFECYCLE.md#Data exposure across boundaries",
+    "starting_paths": [
+      "backend/controllers/registro.controller.js",
+      "backend/routes/registro.routes.js"
+    ],
+    "ordinary_attack_class_block": "DATA-ISOLATION-AND-LIFECYCLE.md#Data exposure across boundaries",
+    "selected_companion_blocks": [
+      "WEB-PROTOCOL-AND-AUTH.md#Core discipline",
+      "DATA-ISOLATION-AND-LIFECYCLE.md#Core discipline",
+      "CLOUD-AND-DEPLOYMENT.md#Core discipline",
+      "RESOURCE-EXHAUSTION-AND-AVAILABILITY.md#Core discipline"
+    ],
+    "excluded_blocks": [
+      {
+        "block": "MEMORY-SAFETY-AND-BINARY.md#Memory safety",
+        "reason": "Target codebase is high-level Node.js JavaScript, not unmanaged C/C++ memory binaries."
+      }
+    ],
+    "prior_status": "none",
+    "attempts": [],
+    "wave": 1,
+    "status": "candidate",
+    "agent_id": "hunter-core",
+    "reviewed_paths": [
+      "backend/controllers/registro.controller.js",
+      "backend/routes/registro.routes.js"
+    ],
+    "local_checks": [
+      {
+        "agent_id": "hunter-core",
+        "reviewed_paths": [
+          "backend/controllers/registro.controller.js",
+          "backend/routes/registro.routes.js"
+        ],
+        "invariant": "Surface must enforce authorization, input validation, and secure default boundaries.",
+        "method": "source",
+        "result": "Static audit and independent verification confirmed security defect.",
+        "artifact": null
+      }
+    ],
+    "result_fingerprints": [
+      "flores-pii-leak-user-tampering"
+    ],
+    "unresolved": []
+  },
+  {
+    "coverage_id": "backend%2Fserver.js%23Express%20rate%20limiting::backend%2Fserver.js%23HTTP%20request%20throttling%20boundary::backend%2Fserver.js::RESOURCE-EXHAUSTION-AND-AVAILABILITY.md%23Rate%20limiting",
+    "canonical_refs": {
+      "surface": "backend/server.js#Express rate limiting",
+      "boundary": "backend/server.js#HTTP request throttling boundary",
+      "subsystem": "backend/server.js",
+      "attack_class": "RESOURCE-EXHAUSTION-AND-AVAILABILITY.md#Rate limiting"
+    },
+    "surface": "backend/server.js#Express rate limiting",
+    "boundary": "backend/server.js#HTTP request throttling boundary",
+    "subsystem": "backend/server.js",
+    "attack_class": "RESOURCE-EXHAUSTION-AND-AVAILABILITY.md#Rate limiting",
+    "starting_paths": [
+      "backend/server.js"
+    ],
+    "ordinary_attack_class_block": "RESOURCE-EXHAUSTION-AND-AVAILABILITY.md#Rate limiting",
+    "selected_companion_blocks": [
+      "WEB-PROTOCOL-AND-AUTH.md#Core discipline",
+      "DATA-ISOLATION-AND-LIFECYCLE.md#Core discipline",
+      "CLOUD-AND-DEPLOYMENT.md#Core discipline",
+      "RESOURCE-EXHAUSTION-AND-AVAILABILITY.md#Core discipline"
+    ],
+    "excluded_blocks": [
+      {
+        "block": "MEMORY-SAFETY-AND-BINARY.md#Memory safety",
+        "reason": "Target codebase is high-level Node.js JavaScript, not unmanaged C/C++ memory binaries."
+      }
+    ],
+    "prior_status": "none",
+    "attempts": [],
+    "wave": 1,
+    "status": "candidate",
+    "agent_id": "hunter-core",
+    "reviewed_paths": [
+      "backend/server.js"
+    ],
+    "local_checks": [
+      {
+        "agent_id": "hunter-core",
+        "reviewed_paths": [
+          "backend/server.js"
+        ],
+        "invariant": "Surface must enforce authorization, input validation, and secure default boundaries.",
+        "method": "source",
+        "result": "Static audit and independent verification confirmed security defect.",
+        "artifact": null
+      }
+    ],
+    "result_fingerprints": [
+      "flores-missing-rate-limiting"
+    ],
+    "unresolved": []
+  },
+  {
+    "coverage_id": "backend%2Fserver.js%23Security%20headers::backend%2Fserver.js%23HTTP%20response%20header%20boundary::backend%2Fserver.js::WEB-PROTOCOL-AND-AUTH.md%23HTTP%20header%20injection%20and%20response%20manipulation",
+    "canonical_refs": {
+      "surface": "backend/server.js#Security headers",
+      "boundary": "backend/server.js#HTTP response header boundary",
+      "subsystem": "backend/server.js",
+      "attack_class": "WEB-PROTOCOL-AND-AUTH.md#HTTP header injection and response manipulation"
+    },
+    "surface": "backend/server.js#Security headers",
+    "boundary": "backend/server.js#HTTP response header boundary",
+    "subsystem": "backend/server.js",
+    "attack_class": "WEB-PROTOCOL-AND-AUTH.md#HTTP header injection and response manipulation",
+    "starting_paths": [
+      "backend/server.js"
+    ],
+    "ordinary_attack_class_block": "WEB-PROTOCOL-AND-AUTH.md#HTTP header injection and response manipulation",
+    "selected_companion_blocks": [
+      "WEB-PROTOCOL-AND-AUTH.md#Core discipline",
+      "DATA-ISOLATION-AND-LIFECYCLE.md#Core discipline",
+      "CLOUD-AND-DEPLOYMENT.md#Core discipline",
+      "RESOURCE-EXHAUSTION-AND-AVAILABILITY.md#Core discipline"
+    ],
+    "excluded_blocks": [
+      {
+        "block": "MEMORY-SAFETY-AND-BINARY.md#Memory safety",
+        "reason": "Target codebase is high-level Node.js JavaScript, not unmanaged C/C++ memory binaries."
+      }
+    ],
+    "prior_status": "none",
+    "attempts": [],
+    "wave": 1,
+    "status": "candidate",
+    "agent_id": "hunter-core",
+    "reviewed_paths": [
+      "backend/server.js"
+    ],
+    "local_checks": [
+      {
+        "agent_id": "hunter-core",
+        "reviewed_paths": [
+          "backend/server.js"
+        ],
+        "invariant": "Surface must enforce authorization, input validation, and secure default boundaries.",
+        "method": "source",
+        "result": "Static audit and independent verification confirmed security defect.",
+        "artifact": null
+      }
+    ],
+    "result_fingerprints": [
+      "flores-missing-security-headers"
+    ],
+    "unresolved": []
+  },
+  {
+    "coverage_id": "docker-compose.yml%23mongodb%20service::docker-compose.yml%23127.0.0.1%3A27017%20and%20docker%20network::docker-compose.yml::CLOUD-AND-DEPLOYMENT.md%23Database%20authentication%20and%20network%20exposure",
+    "canonical_refs": {
+      "surface": "docker-compose.yml#mongodb service",
+      "boundary": "docker-compose.yml#127.0.0.1:27017 and docker network",
+      "subsystem": "docker-compose.yml",
+      "attack_class": "CLOUD-AND-DEPLOYMENT.md#Database authentication and network exposure"
+    },
+    "surface": "docker-compose.yml#mongodb service",
+    "boundary": "docker-compose.yml#127.0.0.1:27017 and docker network",
+    "subsystem": "docker-compose.yml",
+    "attack_class": "CLOUD-AND-DEPLOYMENT.md#Database authentication and network exposure",
+    "starting_paths": [
+      "docker-compose.yml"
+    ],
+    "ordinary_attack_class_block": "CLOUD-AND-DEPLOYMENT.md#Database authentication and network exposure",
+    "selected_companion_blocks": [
+      "WEB-PROTOCOL-AND-AUTH.md#Core discipline",
+      "DATA-ISOLATION-AND-LIFECYCLE.md#Core discipline",
+      "CLOUD-AND-DEPLOYMENT.md#Core discipline",
+      "RESOURCE-EXHAUSTION-AND-AVAILABILITY.md#Core discipline"
+    ],
+    "excluded_blocks": [
+      {
+        "block": "MEMORY-SAFETY-AND-BINARY.md#Memory safety",
+        "reason": "Target codebase is high-level Node.js JavaScript, not unmanaged C/C++ memory binaries."
+      }
+    ],
+    "prior_status": "none",
+    "attempts": [],
+    "wave": 1,
+    "status": "candidate",
+    "agent_id": "hunter-core",
+    "reviewed_paths": [
+      "docker-compose.yml"
+    ],
+    "local_checks": [
+      {
+        "agent_id": "hunter-core",
+        "reviewed_paths": [
+          "docker-compose.yml"
+        ],
+        "invariant": "Surface must enforce authorization, input validation, and secure default boundaries.",
+        "method": "source",
+        "result": "Static audit and independent verification confirmed security defect.",
+        "artifact": null
+      }
+    ],
+    "result_fingerprints": [
+      "flores-mongodb-missing-authentication"
+    ],
+    "unresolved": []
+  }
+]

@@ -1,0 +1,354 @@
+[
+  {
+    "verdict": "confirmed",
+    "fingerprint": "flores-missing-rate-limiting",
+    "title": "Absence of Rate Limiting on Authentication and VIP Registration Endpoints",
+    "description": "The Express application in FloresByDolly has no rate limiting middleware configured. Public endpoints POST /api/auth/login and POST /api/registro can be queried without restriction, exposing the application to password brute-force attacks and automated PII scraping.",
+    "root_cause": "Missing rate-limiting middleware (such as express-rate-limit) on sensitive Express routes.",
+    "intended_behavior": "The application should enforce per-IP and per-account rate limits to mitigate brute force and denial of service.",
+    "trace": [
+      {
+        "kind": "entrypoint",
+        "file": "backend/server.js",
+        "line": 10,
+        "scope": "const app = express()",
+        "description": "Express server initializes without rate limiting middleware."
+      },
+      {
+        "kind": "propagation",
+        "file": "backend/routes/auth.routes.js",
+        "line": 6,
+        "scope": "router.post('/login', authController.login)",
+        "description": "Exposes login endpoint without request throttle."
+      },
+      {
+        "kind": "sink",
+        "file": "backend/controllers/auth.controller.js",
+        "line": 17,
+        "scope": "authController.login",
+        "description": "Performs password comparison on every request without backoff or lockout."
+      }
+    ],
+    "evidence": [
+      {
+        "file": "backend/server.js",
+        "line": 24,
+        "description": "app.use(express.json()); // No express-rate-limit mounted"
+      },
+      {
+        "file": "backend/package.json",
+        "line": 14,
+        "description": "Dependencies list lacks express-rate-limit or equivalent."
+      }
+    ],
+    "conditions": [
+      {
+        "kind": "network_routing",
+        "description": "Attacker sends high-frequency HTTP requests over the network."
+      }
+    ],
+    "execution": {
+      "attacker_perspective": "An attacker uses an automated tool against /api/auth/login.",
+      "payloads": [
+        "for i in $(seq 1 100); do curl -s -X POST http://localhost:3010/api/auth/login -d '{\"username\":\"admin\",\"password\":\"wrong\"}' -H 'Content-Type: application/json'; done"
+      ],
+      "instructions": [
+        "Send rapid concurrent POST requests to /api/auth/login.",
+        "Observe that no 429 Too Many Requests response is returned."
+      ],
+      "observed_result": "Server processes all requests without throttling."
+    },
+    "remediation": {
+      "strategy": "Install express-rate-limit and apply strict limits to auth and registration endpoints.",
+      "code_changes": [
+        {
+          "file_name": "backend/routes/auth.routes.js",
+          "fixed_code": "const rateLimit = require('express-rate-limit');\nconst loginLimiter = rateLimit({\n    windowMs: 15 * 60 * 1000,\n    max: 5,\n    message: { success: false, message: 'Demasiados intentos de inicio de sesión. Intenta en 15 minutos.' }\n});\nrouter.post('/login', loginLimiter, authController.login);"
+        }
+      ]
+    },
+    "severity": {
+      "likelihood": {
+        "score": "high",
+        "reason": "Automated brute force against unthrottled login endpoints is trivial to execute."
+      },
+      "impact": {
+        "score": "medium",
+        "reason": "Exposes administrative accounts to credential compromise and allows resource exhaustion."
+      },
+      "overall_severity": "medium"
+    },
+    "confidence": {
+      "score": "high",
+      "reason": "Confirmed by package.json and server.js route definitions."
+    }
+  },
+  {
+    "verdict": "confirmed",
+    "fingerprint": "flores-missing-security-headers",
+    "title": "Missing HTTP Security Headers and Information Disclosure in FloresByDolly",
+    "description": "The Express backend in FloresByDolly does not utilize helmet or custom security header middleware. It fails to send X-Content-Type-Options: nosniff, X-Frame-Options, or Strict-Transport-Security headers, and leaks the technology stack via the X-Powered-By: Express header.",
+    "root_cause": "Absence of helmet or defensive HTTP header middleware in server.js.",
+    "intended_behavior": "The application should send defensive HTTP headers and suppress technological fingerprinting headers.",
+    "trace": [
+      {
+        "kind": "entrypoint",
+        "file": "backend/server.js",
+        "line": 10,
+        "scope": "const app = express()",
+        "description": "Initializes Express application without security headers middleware."
+      },
+      {
+        "kind": "propagation",
+        "file": "backend/server.js",
+        "line": 28,
+        "scope": "app.use('/uploads', express.static(...))",
+        "description": "Serves static files without nosniff protection."
+      },
+      {
+        "kind": "sink",
+        "file": "backend/server.js",
+        "line": 54,
+        "scope": "app.listen",
+        "description": "Emits responses with default X-Powered-By: Express and without defensive security headers."
+      }
+    ],
+    "evidence": [
+      {
+        "file": "backend/server.js",
+        "line": 13,
+        "description": "app.use(cors(...)); // helmet is not imported or mounted"
+      }
+    ],
+    "conditions": [
+      {
+        "kind": "user_interaction",
+        "description": "Victim visits a malicious third-party website embedding the target in an iframe."
+      }
+    ],
+    "execution": {
+      "attacker_perspective": "An attacker inspects HTTP response headers using curl or browser devtools.",
+      "payloads": [
+        "curl -I http://localhost:3010/api/health"
+      ],
+      "instructions": [
+        "Send GET request to /api/health.",
+        "Observe headers in response."
+      ],
+      "observed_result": "Response contains X-Powered-By: Express and lacks X-Frame-Options, X-Content-Type-Options, and CSP."
+    },
+    "remediation": {
+      "strategy": "Install and mount helmet middleware in server.js and disable x-powered-by header.",
+      "code_changes": [
+        {
+          "file_name": "backend/server.js",
+          "fixed_code": "const helmet = require('helmet');\napp.use(helmet());\napp.disable('x-powered-by');"
+        }
+      ]
+    },
+    "severity": {
+      "likelihood": {
+        "score": "high",
+        "reason": "Headers are missing on every HTTP response served by the backend."
+      },
+      "impact": {
+        "score": "low",
+        "reason": "Permits clickjacking of embedded views, MIME confusion attacks on static uploads, and framework fingerprinting."
+      },
+      "overall_severity": "low"
+    },
+    "confidence": {
+      "score": "high",
+      "reason": "Confirmed by inspecting backend/server.js."
+    }
+  },
+  {
+    "verdict": "confirmed",
+    "fingerprint": "flores-mongodb-missing-authentication",
+    "title": "Missing Authentication on Internal and Host-Bound MongoDB Instance",
+    "description": "The FloresByDolly MongoDB service runs mongo:latest exposed to 127.0.0.1:27017 on the host and unauthenticated on the Docker bridge network. No administrative username or password is configured in docker-compose.yml or backend/config/db.js.",
+    "root_cause": "Omitting MONGO_INITDB_ROOT_USERNAME, MONGO_INITDB_ROOT_PASSWORD, and the --auth flag in the MongoDB container configuration.",
+    "intended_behavior": "MongoDB should run with authentication enforced (--auth) and require a secure username and password for all database operations.",
+    "trace": [
+      {
+        "kind": "entrypoint",
+        "file": "docker-compose.yml",
+        "line": 7,
+        "scope": "services.mongodb.ports",
+        "description": "Exposes unauthenticated MongoDB listener on host 127.0.0.1:27017."
+      },
+      {
+        "kind": "propagation",
+        "file": "backend/config/db.js",
+        "line": 5,
+        "scope": "connectDB",
+        "description": "Connects to database without user credentials: mongoose.connect(process.env.MONGODB_URI)."
+      },
+      {
+        "kind": "sink",
+        "file": "docker-compose.yml",
+        "line": 19,
+        "scope": "services.backend.environment",
+        "description": "Defines connection string without credentials: MONGODB_URI=mongodb://mongodb:27017/floresbydolly."
+      }
+    ],
+    "evidence": [
+      {
+        "file": "docker-compose.yml",
+        "line": 7,
+        "description": "- \"127.0.0.1:27017:27017\""
+      },
+      {
+        "file": "docker-compose.yml",
+        "line": 19,
+        "description": "- MONGODB_URI=mongodb://mongodb:27017/floresbydolly"
+      },
+      {
+        "file": "backend/.env",
+        "line": 2,
+        "description": "MONGODB_URI=mongodb://127.0.0.1:27017/floresbydolly"
+      }
+    ],
+    "conditions": [
+      {
+        "kind": "network_routing",
+        "description": "Attacker has access to the local server host or a container sharing the Docker bridge network."
+      }
+    ],
+    "execution": {
+      "attacker_perspective": "A local service, adjacent container (such as compromised whatsapp-bot), or user on the server connects to port 27017.",
+      "payloads": [
+        "mongosh \"mongodb://127.0.0.1:27017/floresbydolly\" --eval \"db.getCollectionNames(); db.registrosvips.find().pretty();\""
+      ],
+      "instructions": [
+        "Connect to MongoDB using mongosh without credentials.",
+        "Execute read/write commands or dropDatabase()."
+      ],
+      "observed_result": "Full read and write access to all collections with zero authentication."
+    },
+    "remediation": {
+      "strategy": "Enable authentication in docker-compose.yml, generate strong credentials, update MONGODB_URI to include credentials, and remove host port mapping if not needed externally.",
+      "code_changes": [
+        {
+          "file_name": "docker-compose.yml",
+          "fixed_code": "  mongodb:\n    image: mongo:latest\n    container_name: flores-mongodb\n    restart: unless-stopped\n    environment:\n      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}\n      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}\n    command: mongod --auth\n    volumes:\n      - mongodb_data:/data/db"
+        }
+      ]
+    },
+    "severity": {
+      "likelihood": {
+        "score": "high",
+        "reason": "MongoDB port is exposed and connection requires no authentication handshake."
+      },
+      "impact": {
+        "score": "critical",
+        "reason": "Allows complete database theft, deletion, or modification by any local process or container."
+      },
+      "overall_severity": "critical"
+    },
+    "confidence": {
+      "score": "high",
+      "reason": "Confirmed by inspecting docker-compose.yml, backend/.env, and backend/config/db.js."
+    }
+  },
+  {
+    "verdict": "confirmed",
+    "fingerprint": "flores-pii-leak-user-tampering",
+    "title": "Unauthenticated PII Data Harvesting and User Record Overwriting in POST /api/registro",
+    "description": "The public raffle registration endpoint POST /api/registro checks if a phone number already exists in the RegistroVip collection. If found, it overwrites the user name with the attacker-supplied name and returns the complete Mongoose document in data: existente, disclosing the full name, phone number, and all previously referred contacts with their private phone numbers.",
+    "root_cause": "Unconditionally updating the existing user record and returning the complete entity in the public JSON response without authentication or authorization.",
+    "intended_behavior": "The public registration endpoint should reject duplicate submissions with a generic conflict response or return an opaque acknowledgment without exposing existing user details or modifying existing records without verified identity (OTP).",
+    "trace": [
+      {
+        "kind": "entrypoint",
+        "file": "backend/routes/registro.routes.js",
+        "line": 6,
+        "scope": "router.post('/', registroController.registrar)",
+        "description": "Exposes unauthenticated public POST endpoint for raffle registration."
+      },
+      {
+        "kind": "propagation",
+        "file": "backend/controllers/registro.controller.js",
+        "line": 36,
+        "scope": "registroController.registrar",
+        "description": "Queries database for existing record: const existente = await RegistroVip.findOne({ celular: celular.trim() })."
+      },
+      {
+        "kind": "propagation",
+        "file": "backend/controllers/registro.controller.js",
+        "line": 39,
+        "scope": "registroController.registrar",
+        "description": "Overwrites existing record name: existente.nombre = nombre.trim(); existente.activo = true; await existente.save();"
+      },
+      {
+        "kind": "sink",
+        "file": "backend/controllers/registro.controller.js",
+        "line": 52,
+        "scope": "registroController.registrar",
+        "description": "Serializes and returns complete user document: res.json({ success: true, message: '...', data: existente, updated: true })."
+      }
+    ],
+    "evidence": [
+      {
+        "file": "backend/controllers/registro.controller.js",
+        "line": 36,
+        "description": "const existente = await RegistroVip.findOne({ celular: celular.trim() });"
+      },
+      {
+        "file": "backend/controllers/registro.controller.js",
+        "line": 39,
+        "description": "existente.nombre = nombre.trim();"
+      },
+      {
+        "file": "backend/controllers/registro.controller.js",
+        "line": 52,
+        "description": "data: existente,"
+      }
+    ],
+    "conditions": [
+      {
+        "kind": "authentication_level",
+        "description": "Endpoint is public and unauthenticated by design."
+      },
+      {
+        "kind": "network_routing",
+        "description": "Endpoint is accessible from the internet via Cloudflare Tunnel."
+      }
+    ],
+    "execution": {
+      "attacker_perspective": "An unauthenticated attacker sends a registration request containing a target 10-digit phone number with dummy referral data.",
+      "payloads": [
+        "POST /api/registro HTTP/1.1\nHost: www.floresbydolly.com\nContent-Type: application/json\n\n{\"nombre\": \"Pwned User\", \"celular\": \"3001234567\", \"referidos\": [{\"nombre\": \"Dummy\", \"celular\": \"3009999999\"}]}"
+      ],
+      "instructions": [
+        "Issue a POST request to /api/registro with an existing customer mobile number.",
+        "Observe HTTP 200 response returning data: existente with victim full name, phone number, and all previously recorded referrals."
+      ],
+      "observed_result": "Response leaks full name, mobile number, and array of referred friends/family with their personal phone numbers. The database record is also updated with the attacker-controlled name."
+    },
+    "remediation": {
+      "strategy": "Do not return existing user entities in public responses. Return an opaque HTTP 409 Conflict message when a number is already registered, and require OTP verification for any profile modification.",
+      "code_changes": [
+        {
+          "file_name": "backend/controllers/registro.controller.js",
+          "fixed_code": "const existente = await RegistroVip.findOne({ celular: celular.trim() });\nif (existente) {\n    return res.status(409).json({\n        success: false,\n        message: 'Este número ya se encuentra registrado en nuestra rifa.',\n        data: null,\n        updated: false\n    });\n}"
+        }
+      ]
+    },
+    "severity": {
+      "likelihood": {
+        "score": "high",
+        "reason": "The endpoint is completely unauthenticated and can be enumerated programmatically by iterating standard mobile phone prefixes."
+      },
+      "impact": {
+        "score": "critical",
+        "reason": "Causes bulk exfiltration of personally identifiable information (PII) including third-party referral contacts, and allows unauthorized tampering with customer records."
+      },
+      "overall_severity": "critical"
+    },
+    "confidence": {
+      "score": "high",
+      "reason": "Confirmed by source code inspection in registro.controller.js and verified independently."
+    }
+  }
+]

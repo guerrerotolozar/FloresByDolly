@@ -221,3 +221,23 @@ Desarrollado con amor por el equipo de **Flores By Dolly**.
 ## Licencia
 
 Este proyecto esta bajo la licencia ISC.
+
+---
+
+## 🛡️ Auditoría de Seguridad Independiente (Full Audit Mode)
+
+Se ejecutó una auditoría de seguridad exhaustiva utilizando la skill especializada `security-audit` de Google Antigravity en modo **Full Audit**. El análisis cubrió las superficies de entrada HTTP, controladores, middlewares de autenticación, integración con MongoDB y contenedor del bot de WhatsApp, validando los límites de confianza y sumideros de datos mediante subagentes verificadores independientes.
+
+Los resultados y artefactos formales se encuentran registrados en el directorio [`.audit/`](./.audit/):
+- **[`REPORT.md`](./.audit/REPORT.md)**: Informe ejecutivo de seguridad, desglose de postura y matriz de hallazgos.
+- **[`FINDINGS-DETAIL.md`](./.audit/FINDINGS-DETAIL.md)**: Trazas fuente a sumidero, reproducciones delimitadas y casos de prueba de regresión.
+- **[`NEEDS-VALIDATION.md`](./.audit/NEEDS-VALIDATION.md)**: Validaciones de secretos en `.env`, permisos de sesión en WhatsApp y reglas de Cloudflare Tunnel.
+- **[`findings.json`](./.audit/findings.json)**: Registros estructurados validados contra el esquema JSON oficial (`report-schema.json`).
+- **[`coverage-ledger.json`](./.audit/coverage-ledger.json)**: Matriz determinista de cobertura de superficies analizadas.
+
+### Hallazgos Clave Identificados para Remediación:
+1. **[CRITICAL] Fuga de PII y Sobre-escritura no autorizada en `POST /api/registro` (`backend/controllers/registro.controller.js`)**: Al coincidir un número de celular, se sobrescribe el nombre del cliente y se retorna el documento completo con todos los contactos referidos (nombres y celulares de terceros) sin autenticación.
+2. **[CRITICAL] Ausencia de autenticación en MongoDB (`docker-compose.yml` y `backend/config/db.js`)**: El servicio de base de datos se expone en `127.0.0.1:27017` y en la red puente de Docker sin `--auth` ni variables de inicialización de credenciales.
+3. **[MEDIUM] Falta de Rate Limiting (`backend/server.js` y `backend/routes/auth.routes.js`)**: Ausencia de limitación de tasa ante ataques de fuerza bruta en el login administrativo y scraping masivo en el formulario de la rifa.
+4. **[LOW] Falta de Cabeceras de Seguridad HTTP (`backend/server.js`)**: Omisión de `helmet` (riesgo de Clickjacking, MIME sniffing y divulgación de `X-Powered-By: Express`).
+
