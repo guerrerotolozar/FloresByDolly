@@ -62,6 +62,7 @@
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
               "node_modules/aos/dist/aos.css",
+              "node_modules/air-datepicker/air-datepicker.css",
               "src/styles.css"
             ],
             "scripts": [

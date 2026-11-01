@@ -1,0 +1,13 @@
+{
+  "name": "floresbydolly-whatsapp-bot",
+  "version": "1.0.0",
+  "description": "WhatsApp Bot para Aniversario Flores By Dolly",
+  "main": "index.js",
+  "scripts": {
+    "start": "rm -f .wwebjs_auth/session/SingletonLock && node index.js"
+  },
+  "dependencies": {
+    "qrcode-terminal": "^0.12.0",
+    "whatsapp-web.js": "^1.23.0"
+  }
+}

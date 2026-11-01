@@ -1,0 +1,51 @@
+# Dependencies
+node_modules/
+*/node_modules/
+
+# Environment variables & secrets
+.env
+.env.*
+*.env
+!.env.example
+
+# WhatsApp Web Session & Auth Tokens
+.wwebjs_auth/
+.wwebjs_cache/
+*/.wwebjs_auth/
+*/.wwebjs_cache/
+whatsapp-bot/.wwebjs_auth/
+whatsapp-bot/.wwebjs_cache/
+whatsapp-bot/auth_session/
+auth_session/
+
+# Uploads
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Build / Compiled output
+dist/
+frontend/dist/
+.angular/
+frontend/.angular/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# System & OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE & Editors
+.vscode/
+.idea/
+
+# Root migration script & temp files (contains db credentials)
+/migrate.js
+/package.json
+/package-lock.json
+proyecto_completo.txt
+unir.js

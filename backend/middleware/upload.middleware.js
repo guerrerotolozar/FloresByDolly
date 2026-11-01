@@ -1,16 +1,14 @@
 const multer = require('multer');
-const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const cloudinaryStorage = require('multer-storage-cloudinary');
 const cloudinary = require('../config/cloudinary');
 
 // Almacenamiento en Cloudinary (en la nube, no en disco local)
 // Las imágenes persisten entre deploys y se sirven desde CDN
-const storage = new CloudinaryStorage({
-    cloudinary,
-    params: {
-        folder: 'floresbydolly', // Carpeta en Cloudinary
-        allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'gif'],
-        transformation: [{ width: 800, height: 800, crop: 'limit', quality: 'auto' }],
-    },
+const storage = cloudinaryStorage({
+    cloudinary: cloudinary,
+    folder: 'floresbydolly', // Carpeta en Cloudinary
+    allowedFormats: ['jpg', 'jpeg', 'png', 'webp', 'gif'],
+    transformation: [{ width: 800, height: 800, crop: 'limit', quality: 'auto' }]
 });
 
 // Filtrar solo imágenes

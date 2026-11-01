@@ -1,0 +1,75 @@
+.not-found-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url('/assets/img/Gerbera_Amarilla.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  padding: 20px;
+  position: relative;
+}
+
+.not-found-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7); /* Un poco más oscuro para que resalte el error */
+  z-index: 1;
+}
+
+.glass-card {
+  position: relative;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 50px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  color: white;
+}
+
+.error-code {
+  font-size: 6rem;
+  font-weight: 800;
+  margin: 0;
+  background: linear-gradient(135deg, #FFB75E 0%, #ED8F03 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.title {
+  font-size: 1.5rem;
+  margin: 15px 0;
+}
+
+.subtitle {
+  font-size: 1rem;
+  opacity: 0.8;
+  margin-bottom: 30px;
+}
+
+.glass-button {
+  display: inline-block;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 12px 25px;
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  transition: all 0.3s ease;
+}
+
+.glass-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}

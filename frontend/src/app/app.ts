@@ -19,6 +19,10 @@ export class App implements OnInit {
     return this.router.url.startsWith('/admin');
   }
 
+  get isRifaRoute(): boolean {
+    return this.router.url.startsWith('/rifa');
+  }
+
   ngOnInit() {
     // Initialize AOS (Animate On Scroll)
     if (typeof AOS !== 'undefined') {

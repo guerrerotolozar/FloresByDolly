@@ -1,0 +1,51 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: flores-mongodb
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+  backend:
+    build: ./backend
+    container_name: flores-backend
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3010:3000"
+    environment:
+      # Conectar el backend a la red de Mongo local usando el nombre del contenedor
+      - MONGODB_URI=mongodb://mongodb:27017/floresbydolly
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - mongodb
+
+  whatsapp-bot:
+    build: ./whatsapp-bot
+    container_name: flores-whatsapp-bot
+    restart: unless-stopped
+    shm_size: '1gb'
+    user: "1000:1000"
+    volumes:
+      # Persistencia de la sesión de WhatsApp
+      - ./whatsapp-bot/auth_session:/usr/src/app/.wwebjs_auth
+
+  frontend:
+    build: ./frontend
+    container_name: flores-frontend
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:4200:80"
+    depends_on:
+      - backend
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: flores-cloudflared
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run --token ${TUNNEL_TOKEN}
+
+volumes:
+  mongodb_data:

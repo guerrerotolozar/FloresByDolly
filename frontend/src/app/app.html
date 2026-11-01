@@ -1,8 +1,8 @@
-@if (!isAdminRoute) {
+@if (!isAdminRoute && !isRifaRoute) {
   <app-header />
 }
 <router-outlet />
-@if (!isAdminRoute) {
+@if (!isAdminRoute && !isRifaRoute) {
   <app-footer />
   <app-whatsapp-float />
 }

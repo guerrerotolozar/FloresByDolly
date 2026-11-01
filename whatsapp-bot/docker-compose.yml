@@ -1,0 +1,10 @@
+
+
+services:
+  whatsapp-bot:
+    build: .
+    container_name: flores-whatsapp-bot
+    restart: unless-stopped
+    volumes:
+      # Montamos el volumen para guardar la sesión y no tener que escanear el QR cada vez
+      - ./auth_session:/usr/src/app/.wwebjs_auth
