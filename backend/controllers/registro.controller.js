@@ -32,25 +32,16 @@ exports.registrar = async (req, res) => {
             });
         }
 
-        // Buscar si ya existe por celular, si existe actualizamos sus datos
+        // 1. Blindaje contra Fuga de PII y alteración no autorizada:
+        // Si el número ya existe, no se sobrescriben datos ni se expone información privada.
         const existente = await RegistroVip.findOne({ celular: celular.trim() });
 
         if (existente) {
-            existente.nombre = nombre.trim();
-            // Agregar los referidos nuevos a los existentes (evitando sobreescribir si ya tenía)
-            const nuevosReferidos = [...existente.referidos, ...referidosLimpios];
-            // Opcional: Eliminar duplicados de referidos por número
-            const referidosUnicos = Array.from(new Map(nuevosReferidos.map(r => [r.celular, r])).values());
-            
-            existente.referidos = referidosUnicos;
-            existente.activo = true;
-            await existente.save();
-
-            return res.json({
-                success: true,
-                message: '¡Datos actualizados! Ya estabas registrado, actualizamos tu info de referidos.',
-                data: existente,
-                updated: true,
+            return res.status(409).json({
+                success: false,
+                message: 'Este número ya se encuentra registrado en nuestra rifa de Aniversario.',
+                data: null,
+                updated: false,
             });
         }
 
@@ -61,10 +52,14 @@ exports.registrar = async (req, res) => {
             referidos: referidosLimpios,
         });
 
+        // Retornar DTO sanitizado (solo confirmación, sin exponer estructura interna de BD)
         res.status(201).json({
             success: true,
             message: '¡Registro exitoso! Bienvenido a la rifa de Aniversario.',
-            data: nuevoRegistro,
+            data: {
+                id: nuevoRegistro._id,
+                nombre: nuevoRegistro.nombre,
+            },
             updated: false,
         });
     } catch (error) {

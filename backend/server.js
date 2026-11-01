@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
 const path = require('path');
 const connectDB = require('./config/db');
 
@@ -8,6 +9,13 @@ const connectDB = require('./config/db');
 connectDB();
 
 const app = express();
+
+// Seguridad HTTP & Proxy Trust para Cloudflare Tunnel
+app.disable('x-powered-by');
+app.set('trust proxy', 1);
+app.use(helmet({
+    crossOriginResourcePolicy: { policy: 'cross-origin' }
+}));
 
 // Middleware
 app.use(cors({
